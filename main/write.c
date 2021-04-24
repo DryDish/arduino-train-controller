@@ -1,35 +1,35 @@
 #include "write.h"
 
-int writeByte(unsigned char commandPin, int byte)
+int writeByte(unsigned char pin, int byte)
 { 
   int a;
   for(a=128;a>0;a=a/2)
   { 
     if((byte & a)!=0)
-      writeBit(commandPin, 1);
+      writeBit(pin, 1);
     else 
     {
-      writeBit(commandPin, 0);
+      writeBit(pin, 0);
     }
       
   }
   return 0;
 }
 
-int writeBit(unsigned char commandPin, unsigned char b)
+int writeBit(unsigned char pin, unsigned char b)
 { 
   if(b==0)
   {
-    digitalWrite(commandPin,0x1);
+    digitalWrite(pin,0x1);
     delayMicroseconds(116);
-    digitalWrite(commandPin,0x1);
+    digitalWrite(pin,0x1);
     delayMicroseconds(116);
   }
   else
   {
-    digitalWrite(commandPin,0x1);
+    digitalWrite(pin, 0x0);
     delayMicroseconds(58);
-    digitalWrite(commandPin,0x1);
+    digitalWrite(pin, 0x0);
     delayMicroseconds(58);
   }
   return 0;

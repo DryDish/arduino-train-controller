@@ -1,12 +1,8 @@
 #include <stdio.h>
 #include "writeToTrain.h"
 #include "write.h"
-/*
-void writeByte(unsigned char byte)
-{
-    printf("data sent: 0x%X, %d \n", byte, byte);
-}
-*/
+
+
 int writeToTrain(unsigned char pin, struct Instruction instruction)
 {
     printf("writing to train...\n");

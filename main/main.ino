@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "readFromStruct.h"
+//#include "readFromStruct.h"
 #include "write.h"
 #include "writeToTrain.h"
 #include "instruction.h"
@@ -13,17 +13,10 @@
 #define ACTIVE_PIN2 0
 #define ACTIVE_PIN3 0
 
-void setup()
+void readStructData(struct Instruction instruction);
+
+void function()
 {
-    //Serial Port begin
-	Serial.begin(9600);
-
-
-}
-
-void loop()
-{   
-    /*
     struct Instruction blankInstruction =
     {
             blankPreamble,      // preamble part 1
@@ -48,13 +41,49 @@ void loop()
             testInstruction.command ^ testInstruction.engineNumber,  // Checksum
             END_OF_MESSAGE        // --- End of message bit ---
     };
-    */
-    //Serial.print(readStructData(blankInstruction));
-    //writeToTrain(ACTIVE_PIN1, testInstruction);
-    Serial.println("test");
-    //Serial.print(readStructData(testInstruction));
-    //writeToTrain(ACTIVE_PIN1, testInstruction);
     
+    readInstructionData(testInstruction);
+    readInstructionData(blankInstruction);
+    Serial.print("\n");
+    //writeToTrain(ACTIVE_PIN1, testInstruction);
+    Serial.println("\n--------------- test output ---------------\n");
+    //writeToTrain(ACTIVE_PIN1, testInstruction);
+}
+
+void setup()
+{
+    //Serial Port begin
+	Serial.begin(9600);
+}
+
+void loop()
+{   
+    function();
     delay(1000);
-    
+}
+
+
+// TODO - Find out how to use Serial outside of main 
+void readInstructionData(struct Instruction instruction)
+{
+    char* preambleFixed = "whoops";
+    int total = (instruction.preamble[0] + instruction.preamble[1]);
+    if (total == 510)
+    {
+        preambleFixed = "0xFFFF";
+    }
+    if (total == 0)
+    {
+        preambleFixed = "0x0000";
+    }
+
+    Serial.print("The preamble is: ");
+    Serial.print(preambleFixed);
+    Serial.print(" The engine number is: ");
+    Serial.print(instruction.engineNumber);
+    Serial.print(" The command is: ");
+    Serial.print(instruction.command);
+    Serial.print(" The checksum is: ");
+    Serial.print(instruction.checksum); 
+    Serial.println();
 }

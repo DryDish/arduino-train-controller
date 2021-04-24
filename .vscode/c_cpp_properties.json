@@ -17,7 +17,7 @@
             ],
             "intelliSenseMode": "linux-gcc-x64",
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu17",
+            "cStandard": "c11",
             "cppStandard": "gnu++14"
         }
     ],
