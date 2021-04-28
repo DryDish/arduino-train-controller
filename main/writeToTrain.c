@@ -16,5 +16,6 @@ int writeToTrain(unsigned char pin, struct Instruction instruction)
     writeBit(pin ,instruction.blank3);
     writeByte(pin ,instruction.checksum);
     writeBit(pin ,instruction.endChar);
+    writeBit(pin ,instruction.endChar);
     return 0;
 }

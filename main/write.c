@@ -22,12 +22,12 @@ int writeBit(unsigned char pin, unsigned char b)
   {
     digitalWrite(pin,0x1);
     delayMicroseconds(116);
-    digitalWrite(pin,0x1);
+    digitalWrite(pin,0x0);
     delayMicroseconds(116);
   }
   else
   {
-    digitalWrite(pin, 0x0);
+    digitalWrite(pin, 0x1);
     delayMicroseconds(58);
     digitalWrite(pin, 0x0);
     delayMicroseconds(58);

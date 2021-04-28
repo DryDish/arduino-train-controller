@@ -1,13 +1,13 @@
 #include <stdio.h>
 //#include "readFromStruct.h"
+#include "definitions.h"
+#include "instruction.h"
 #include "write.h"
 #include "writeToTrain.h"
-#include "instruction.h"
-#include "definitions.h"
 
 
-#define ENGINE_NUMBER 40
-#define COMMAND 137
+#define ENGINE_NUMBER 11
+#define COMMAND 0x65
 
 #define ACTIVE_PIN_A 4
 #define ACTIVE_PIN_B 0
@@ -50,19 +50,19 @@ void setup()
     pinMode(ACTIVE_PIN_A,OUTPUT);
     
     // Serial Port for printouts
-	Serial.begin(9600);
+	//Serial.begin(9600);
 }
 
 void loop()
 {   
-    Serial.println("\n--------------- test output ---------------\n");
-    readInstructionData(blankInstruction);
+    //Serial.println("\n--------------- test output ---------------\n");
+    //readInstructionData(blankInstruction);
     //writeToTrain(ACTIVE_PIN1, blankInstruction);
-    delay(1000);
-    Serial.println("\n--------------- test output ---------------\n");
-    readInstructionData(testInstruction);
-    //writeToTrain(ACTIVE_PIN1, testInstruction);
-    delay(1000);
+    //delay(1000);
+    //Serial.println("\n--------------- test output ---------------\n");
+    //readInstructionData(testInstruction);
+    writeToTrain(ACTIVE_PIN_A, testInstruction);
+    //delay(1000);
 
 }
 
