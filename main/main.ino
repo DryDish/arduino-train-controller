@@ -9,24 +9,24 @@
 #define ENGINE_NUMBER 40
 #define COMMAND 137
 
-#define ACTIVE_PIN_UNO 4
-#define ACTIVE_PIN2_DUE 0
-#define ACTIVE_PIN3_TRE 0
+#define ACTIVE_PIN_A 4
+#define ACTIVE_PIN_B 0
+#define ACTIVE_PIN_C 0
 
 void readStructData(struct Instruction instruction);
 
 struct Instruction blankInstruction =
-    {
-            blankPreamble,      // preamble part 1
-            blankPreamble,      // preamble part 2
-            blankSeparator,     // -- Separating bit --
-            blankEngineNumber,  // Engine Number
-            blankSeparator,     // -- Separating bit --
-            blankCommand,       // Command
-            blankSeparator,     // -- Separating bit --
-            blankInstruction.command ^ blankInstruction.engineNumber,  // Checksum
-            blankEndOfMessage   // --- End of message bit ---
-    };
+{
+        blankPreamble,      // preamble part 1
+        blankPreamble,      // preamble part 2
+        blankSeparator,     // -- Separating bit --
+        blankEngineNumber,  // Engine Number
+        blankSeparator,     // -- Separating bit --
+        blankCommand,       // Command
+        blankSeparator,     // -- Separating bit --
+        blankInstruction.command ^ blankInstruction.engineNumber,  // Checksum
+        blankEndOfMessage   // --- End of message bit ---
+};
 
 struct Instruction testInstruction =
 {
@@ -44,7 +44,12 @@ struct Instruction testInstruction =
 
 void setup()
 {
-    //Serial Port begin
+    // Enable the LED of the arduino
+    pinMode(LED_BUILTIN, OUTPUT);
+    // Enable a pin as output
+    pinMode(ACTIVE_PIN_A,OUTPUT);
+    
+    // Serial Port for printouts
 	Serial.begin(9600);
 }
 
