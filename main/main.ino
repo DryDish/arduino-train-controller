@@ -7,7 +7,7 @@
 
 
 #define ENGINE_NUMBER 11
-#define COMMAND 0x65
+#define COMMAND HARDSTOP
 
 #define ACTIVE_PIN_A 4
 #define ACTIVE_PIN_B 0

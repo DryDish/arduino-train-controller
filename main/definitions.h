@@ -16,10 +16,20 @@
 // ----------- Commands -----------
 
 // Speed
-#define speed1 0x64
-#define speed2 0x65
-#define speed3 0x66
-#define speed4 0x67
+#define SPEED0 0x60
+#define HARDSTOP 0x61
+#define SPEED1 0x64
+#define SPEED2 0x65
+#define SPEED3 0x66
+#define SPEED4 0x67
+#define SPEED5 0x68
+#define SPEED6 0x69
+#define SPEED7 0x6A
+#define SPEED8 0x6B
+#define SPEED9 0x6C
+#define SPEED10 0x6D
+#define SPEED11 0x6E
+#define SPEED12 0x6F
 
 #define test "test"
 
