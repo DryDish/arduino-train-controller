@@ -9,12 +9,12 @@ int writeToTrain(unsigned char pin, struct Instruction instruction)
 
     writeByte(pin ,instruction.preamble[0]);
     writeByte(pin ,instruction.preamble[1]);
-    writeByte(pin ,instruction.blank1);
+    writeBit(pin ,instruction.blank1);
     writeByte(pin ,instruction.engineNumber);
-    writeByte(pin ,instruction.blank2);
+    writeBit(pin ,instruction.blank2);
     writeByte(pin ,instruction.command);
-    writeByte(pin ,instruction.blank3);
+    writeBit(pin ,instruction.blank3);
     writeByte(pin ,instruction.checksum);
-    writeByte(pin ,instruction.endChar);
+    writeBit(pin ,instruction.endChar);
     return 0;
 }

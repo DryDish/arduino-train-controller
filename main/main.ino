@@ -9,15 +9,13 @@
 #define ENGINE_NUMBER 40
 #define COMMAND 137
 
-#define ACTIVE_PIN1 4
-#define ACTIVE_PIN2 0
-#define ACTIVE_PIN3 0
+#define ACTIVE_PIN_UNO 4
+#define ACTIVE_PIN2_DUE 0
+#define ACTIVE_PIN3_TRE 0
 
 void readStructData(struct Instruction instruction);
 
-void function()
-{
-    struct Instruction blankInstruction =
+struct Instruction blankInstruction =
     {
             blankPreamble,      // preamble part 1
             blankPreamble,      // preamble part 2
@@ -29,26 +27,20 @@ void function()
             blankInstruction.command ^ blankInstruction.engineNumber,  // Checksum
             blankEndOfMessage   // --- End of message bit ---
     };
-    struct Instruction testInstruction =
-    {
-            PREAMBLE,           // preamble part 1
-            PREAMBLE,           // preamble part 2
-            SEPARATOR,          // -- Separating bit --
-            ENGINE_NUMBER,      // Engine Number
-            SEPARATOR,          // -- Separating bit --
-            COMMAND,            // Command
-            SEPARATOR,          // -- Separating bit --
-            testInstruction.command ^ testInstruction.engineNumber,  // Checksum
-            END_OF_MESSAGE        // --- End of message bit ---
-    };
-    
-    readInstructionData(testInstruction);
-    readInstructionData(blankInstruction);
-    Serial.print("\n");
-    //writeToTrain(ACTIVE_PIN1, testInstruction);
-    Serial.println("\n--------------- test output ---------------\n");
-    //writeToTrain(ACTIVE_PIN1, testInstruction);
-}
+
+struct Instruction testInstruction =
+{
+        PREAMBLE,           // preamble part 1
+        PREAMBLE,           // preamble part 2
+        SEPARATOR,          // -- Separating bit --
+        ENGINE_NUMBER,      // Engine Number
+        SEPARATOR,          // -- Separating bit --
+        COMMAND,            // Command
+        SEPARATOR,          // -- Separating bit --
+        testInstruction.command ^ testInstruction.engineNumber,  // Checksum
+        END_OF_MESSAGE        // --- End of message bit ---
+};
+
 
 void setup()
 {
@@ -58,12 +50,19 @@ void setup()
 
 void loop()
 {   
-    function();
+    Serial.println("\n--------------- test output ---------------\n");
+    readInstructionData(blankInstruction);
+    //writeToTrain(ACTIVE_PIN1, blankInstruction);
     delay(1000);
+    Serial.println("\n--------------- test output ---------------\n");
+    readInstructionData(testInstruction);
+    //writeToTrain(ACTIVE_PIN1, testInstruction);
+    delay(1000);
+
 }
 
 
-// TODO - Find out how to use Serial outside of main 
+// TODO - Find out how to use Serial outside of main, for now, it lives here
 void readInstructionData(struct Instruction instruction)
 {
     char* preambleFixed = "whoops";
