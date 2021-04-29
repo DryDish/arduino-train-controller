@@ -5,8 +5,8 @@
 #define blankPreamble 0x00
 #define blankSeparator 0
 #define blankEndOfMessage 0
-#define blankEngineNumber 0
-#define blankCommand 0
+#define blankByteOne 0
+#define blankByteTwo 0
 #define blankEndOfMessage 0
 
 #define PREAMBLE 255

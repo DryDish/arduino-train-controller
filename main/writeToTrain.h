@@ -1,5 +1,6 @@
 #ifndef C_REPO_WRITETOTRAIN_H
 #define C_REPO_WRITETOTRAIN_H
+#include "instruction.h"
 
 #ifdef __cplusplus
  extern "C" {

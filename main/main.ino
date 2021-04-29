@@ -7,7 +7,7 @@
 
 
 #define ENGINE_NUMBER 11
-#define COMMAND HARDSTOP
+#define COMMAND SPEED2
 
 
 #define ACTIVE_PIN_A 4
@@ -21,11 +21,11 @@ struct Instruction blankInstruction =
         blankPreamble,      // preamble part 1
         blankPreamble,      // preamble part 2
         blankSeparator,     // -- Separating bit --
-        blankEngineNumber,  // Engine Number
+        blankByteOne,  // Engine Number
         blankSeparator,     // -- Separating bit --
-        blankCommand,       // Command
+        blankByteTwo,       // byteTwo
         blankSeparator,     // -- Separating bit --
-        blankInstruction.command ^ blankInstruction.engineNumber,  // Checksum
+        blankInstruction.byteOne ^ blankInstruction.byteTwo,  // Checksum
         blankEndOfMessage   // --- End of message bit ---
 };
 
@@ -36,9 +36,9 @@ struct Instruction testInstruction =
         SEPARATOR,          // -- Separating bit --
         ENGINE_NUMBER,      // Engine Number
         SEPARATOR,          // -- Separating bit --
-        COMMAND,            // Command
+        COMMAND,            // byteTwo
         SEPARATOR,          // -- Separating bit --
-        testInstruction.command ^ testInstruction.engineNumber,  // Checksum
+        testInstruction.byteOne ^ testInstruction.byteTwo,  // Checksum
         END_OF_MESSAGE        // --- End of message bit ---
 };
 
@@ -85,9 +85,9 @@ void readInstructionData(struct Instruction instruction)
     Serial.print("The preamble is: ");
     Serial.print(preambleFixed);
     Serial.print(" The engine number is: ");
-    Serial.print(instruction.engineNumber);
-    Serial.print(" The command is: ");
-    Serial.print(instruction.command);
+    Serial.print(instruction.byteOne);
+    Serial.print(" The byteTwo is: ");
+    Serial.print(instruction.byteTwo);
     Serial.print(" The checksum is: ");
     Serial.print(instruction.checksum); 
     Serial.println();

@@ -5,9 +5,9 @@ struct Instruction
 {
     unsigned char preamble[2];
     unsigned char blank1;
-    unsigned char engineNumber;
+    unsigned char byteOne;
     unsigned char blank2;
-    unsigned char command;
+    unsigned char byteTwo;
     unsigned char blank3;
     unsigned char checksum;
     unsigned char endChar;
