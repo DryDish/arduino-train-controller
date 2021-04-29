@@ -9,6 +9,7 @@
 #define ENGINE_NUMBER 11
 #define COMMAND HARDSTOP
 
+
 #define ACTIVE_PIN_A 4
 #define ACTIVE_PIN_B 0
 #define ACTIVE_PIN_C 0
@@ -57,7 +58,7 @@ void loop()
 {   
     //Serial.println("\n--------------- test output ---------------\n");
     //readInstructionData(blankInstruction);
-    //writeToTrain(ACTIVE_PIN1, blankInstruction);
+    //writeToTrain(ACTIVE_PIN_A, blankInstruction);
     //delay(1000);
     //Serial.println("\n--------------- test output ---------------\n");
     //readInstructionData(testInstruction);

@@ -31,7 +31,16 @@
 #define SPEED11 0x6E
 #define SPEED12 0x6F
 
-#define test "test"
-
+// Sounds
+#define SOUND_OFF 0x80
+#define SOUND_HORN 0x81
+#define HORN3 0x82
+#define HORN4 0x83
+#define HORN5 0x84
+#define SOUND_BELL 0x85
+#define SOUND_WHISTLE 0x86
+#define SOUND_JUSTDIE 0x87
+#define SOUND_CHUG 0x88
+#define HORN10 0x89
 
 #endif //C_REPO_DEFINITIONS_H

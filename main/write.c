@@ -16,6 +16,23 @@ int writeByte(unsigned char pin, int byte)
   return 0;
 }
 
+
+int trackWriteByte(unsigned char pin, int byte)
+{ 
+  int a;
+  for(a=128;a>0;a=a/2)
+  { 
+    if((byte & a)!=0)
+      writeBit(pin, 1);
+    else 
+    {
+      writeBit(pin, 0);
+    }
+      
+  }
+  return 0;
+}
+
 int writeBit(unsigned char pin, unsigned char b)
 { 
   if(b==0)
