@@ -4,27 +4,23 @@
 #include "instruction.h"
 #include "write.h"
 #include "writeToTrain.h"
+#include "writeToTrack.h"
 
 // 1001 1010 -- 154
 // 1111 1001 -- 249 // straight
 
 // 1001 1010 -- 154
 // 1111 1001 -- 248 // turn
-#define ENGINE_NUMBER 154
-#define COMMAND 248
-
+#define ENGINE_NUMBER 11
+#define COMMAND SPEED4
+#define ACTIVE_PIN_A 4
 
 // 1001 1010 -- 154
 // 1111 0001 -- 241 // straight off
 
 // 1001 1010 -- 154
 // 1111 0001 -- 240 // turn off
-#define ENGINE_NUMBER2 154
-#define COMMAND2 240
 
-#define ACTIVE_PIN_A 4
-#define ACTIVE_PIN_B 0
-#define ACTIVE_PIN_C 0
 
 void readStructData(struct Instruction instruction);
 
@@ -55,19 +51,6 @@ struct Instruction testInstruction =
 };
 
 
-struct Instruction testInstruction2 =
-{
-        PREAMBLE,           // preamble part 1
-        PREAMBLE,           // preamble part 2
-        SEPARATOR,          // -- Separating bit --
-        ENGINE_NUMBER2,      // Engine Number
-        SEPARATOR,          // -- Separating bit --
-        COMMAND2,            // byteTwo
-        SEPARATOR,          // -- Separating bit --
-        testInstruction.byteOne ^ testInstruction.byteTwo,  // Checksum
-        END_OF_MESSAGE        // --- End of message bit ---
-};
-
 void setup()
 {
     // Enable the LED of the arduino
@@ -76,7 +59,7 @@ void setup()
     pinMode(ACTIVE_PIN_A,OUTPUT);
     
     // Serial Port for printouts
-	//Serial.begin(9600);
+	Serial.begin(9600);
 }
 
 void loop()
@@ -87,8 +70,10 @@ void loop()
     //delay(1000);
     //Serial.println("\n--------------- test output ---------------\n");
     //readInstructionData(testInstruction);
-    writeToTrain(ACTIVE_PIN_A, testInstruction);
-    writeToTrain(ACTIVE_PIN_A, testInstruction2);
+    Serial.print(writeToTrack(101, 0));
+    Serial.println();
+    //writeToTrain(ACTIVE_PIN_A, testInstruction);
+  //  writeToTrain(ACTIVE_PIN_A, testInstruction2);
     //delay(1000);
 
 }
@@ -118,13 +103,3 @@ void readInstructionData(struct Instruction instruction)
     Serial.print(instruction.checksum); 
     Serial.println();
 }
-
-
-
-//
-/*
-void cangeTrack()
-{
-    writeBit()
-}
-*/
