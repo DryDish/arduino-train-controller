@@ -70,7 +70,10 @@ void loop()
     //delay(1000);
     //Serial.println("\n--------------- test output ---------------\n");
     //readInstructionData(testInstruction);
+
+    // accessory address, power, direction, *byteOne, *byteTwo
     writeToTrack(101, 1, 1, testInstruction.byteOne, testInstruction.byteTwo);
+    
     readInstructionData(testInstruction);
     delay(200);
     //writeToTrain(ACTIVE_PIN_A, testInstruction);

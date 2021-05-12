@@ -23,4 +23,3 @@ void writeToTrack(unsigned int address, unsigned char power, unsigned char direc
     
     *byteTwo += tempByteTwo + power + registerAddress + direction;
 }
-iteToTrack(101, 1, 1, testInstruction.byteOne, testInstruction.byteTwo);
