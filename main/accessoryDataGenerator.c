@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include "writeToTrain.h"
-#include "write.h"
 
 unsigned short accessoryDataGenerator(unsigned short address, unsigned char power, unsigned char direction)
 {
