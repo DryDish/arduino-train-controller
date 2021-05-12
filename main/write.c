@@ -1,3 +1,4 @@
+#include<Arduino.h>  
 #include "write.h"
 
 int writeByte(unsigned char pin, int byte)
