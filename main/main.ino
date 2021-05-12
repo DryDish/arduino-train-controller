@@ -70,8 +70,9 @@ void loop()
     //delay(1000);
     //Serial.println("\n--------------- test output ---------------\n");
     //readInstructionData(testInstruction);
-    Serial.print(writeToTrack(101, 0));
-    Serial.println();
+    writeToTrack(101, 1, 1, testInstruction.byteOne, testInstruction.byteTwo);
+    readInstructionData(testInstruction);
+    delay(200);
     //writeToTrain(ACTIVE_PIN_A, testInstruction);
   //  writeToTrain(ACTIVE_PIN_A, testInstruction2);
     //delay(1000);
@@ -95,7 +96,7 @@ void readInstructionData(struct Instruction instruction)
 
     Serial.print("The preamble is: ");
     Serial.print(preambleFixed);
-    Serial.print(" The engine number is: ");
+    Serial.print(" The byteOne: ");
     Serial.print(instruction.byteOne);
     Serial.print(" The byteTwo is: ");
     Serial.print(instruction.byteTwo);
