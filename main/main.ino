@@ -50,35 +50,37 @@ struct Instruction testInstruction =
         END_OF_MESSAGE        // --- End of message bit ---
 };
 
-
+unsigned short testerShort;
 void setup()
 {
     // Enable the LED of the arduino
     pinMode(LED_BUILTIN, OUTPUT);
     // Enable a pin as output
     pinMode(ACTIVE_PIN_A,OUTPUT);
-    
     // Serial Port for printouts
-	Serial.begin(9600);
+	//Serial.begin(9600);
 }
 
 void loop()
 {   
+    
     //Serial.println("\n--------------- test output ---------------\n");
     //readInstructionData(blankInstruction);
     //writeToTrain(ACTIVE_PIN_A, blankInstruction);
     //delay(1000);
     //Serial.println("\n--------------- test output ---------------\n");
     //readInstructionData(testInstruction);
+    testerShort = writeToTrack(102, 0, 1);
+    writeToTrain(ACTIVE_PIN_A, testInstruction, testerShort);
 
+    testerShort = writeToTrack(102, 1, 1);
+    writeToTrain(ACTIVE_PIN_A, testInstruction, testerShort);
     // accessory address, power, direction, *byteOne, *byteTwo
-    writeToTrack(101, 1, 1, testInstruction.byteOne, testInstruction.byteTwo);
-    
-    readInstructionData(testInstruction);
-    delay(200);
+    //Serial.print(writeToTrack(101, 1, 1));
+    //Serial.println();
+    //readInstructionData(testInstruction);
     //writeToTrain(ACTIVE_PIN_A, testInstruction);
-  //  writeToTrain(ACTIVE_PIN_A, testInstruction2);
-    //delay(1000);
+    //writeToTrain(ACTIVE_PIN_A, testInstruction2);
 
 }
 

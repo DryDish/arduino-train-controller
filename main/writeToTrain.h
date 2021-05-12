@@ -9,7 +9,7 @@
 
 #include "instruction.h"
 
-int writeToTrain(unsigned char pin, struct Instruction instruction);
+int writeToTrain(unsigned char pin, struct Instruction instruction, unsigned short message);
 
 
 #ifdef __cplusplus

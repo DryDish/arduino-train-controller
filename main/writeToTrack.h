@@ -3,7 +3,7 @@
  extern "C" {
 #endif
 
-void writeToTrack(unsigned int address, unsigned char power, unsigned char direction, unsigned char &byteOne, unsigned char &byteTwo);
+unsigned short writeToTrack(unsigned short address, unsigned char power, unsigned char direction);
 
 #ifdef __cplusplus
 }
