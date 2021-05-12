@@ -2,7 +2,7 @@
 #include "writeToTrain.h"
 #include "write.h"
 
-unsigned short writeToTrack(unsigned short address, unsigned char power, unsigned char direction)
+unsigned short accessoryDataGenerator(unsigned short address, unsigned char power, unsigned char direction)
 {
     unsigned char byteOne = 128; // 128 = 0b 1000 0000
     unsigned char byteTwo = 128; // 128 = 0b 1000 0000

@@ -4,7 +4,7 @@
 #include "instruction.h"
 #include "write.h"
 #include "writeToTrain.h"
-#include "writeToTrack.h"
+#include "accessoryDataGenerator.h"
 
 // 1001 1010 -- 154
 // 1111 1001 -- 249 // straight
@@ -70,11 +70,11 @@ void loop()
     //delay(1000);
     //Serial.println("\n--------------- test output ---------------\n");
     //readInstructionData(testInstruction);
-    testerShort = writeToTrack(102, 0, 1);
-    writeToTrain(ACTIVE_PIN_A, testInstruction, testerShort);
+    //testerShort = writeToTrack(102, 0, 1);
+    //writeToTrain(ACTIVE_PIN_A, testInstruction, testerShort);
 
-    testerShort = writeToTrack(102, 1, 1);
-    writeToTrain(ACTIVE_PIN_A, testInstruction, testerShort);
+    //testerShort = writeToTrack(102, 1, 1);
+    //writeToTrain(ACTIVE_PIN_A, testInstruction, testerShort);
     // accessory address, power, direction, *byteOne, *byteTwo
     //Serial.print(writeToTrack(101, 1, 1));
     //Serial.println();
