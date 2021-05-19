@@ -1,6 +1,6 @@
 {
     "board": "arduino:avr:uno",
     "programmer": "AVRISP mkII",
-    "sketch": "main/main.ino",
+    "sketch": "interrupt/interrupt.ino",
     "port": "/dev/ttyACM0"
 }

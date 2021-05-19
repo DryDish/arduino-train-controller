@@ -1,0 +1,15 @@
+#include "readCommand.h"
+
+// this HAS to be a cpp file in order for Serial to work, but code is written in C first.
+
+void readCommand(struct Command *commandPointer, const char *prefix)
+{
+    Serial.print(prefix);
+    Serial.print(" edit < byteOne: ");
+    Serial.print(commandPointer -> byteOne);
+    Serial.print(" byteTwo: ");
+    Serial.print(commandPointer -> byteTwo);
+    Serial.print(" checksum: ");
+    Serial.print(commandPointer -> checksum);
+    Serial.println(" >");
+}
