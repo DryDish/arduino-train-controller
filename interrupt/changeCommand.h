@@ -5,6 +5,6 @@
 #include <Arduino.h> 
 #include "command.h"
 
-void changeCommand(struct Command *command, unsigned char *byteOne, unsigned char *byteTwo);
+void changeCommand(struct Command *command, unsigned char byteOne, unsigned char byteTwo);
 
 #endif // TRAIN_CODE_C_CHANGE_COMMAND

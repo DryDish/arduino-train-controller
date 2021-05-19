@@ -15,12 +15,18 @@ struct Command command =
         command.byteOne ^ command.byteTwo,  // Checksum
         END_OF_MESSAGE        // --- End of message bit ---
 };
-Command *commandPointer = &command;
+
+
 
 unsigned char byteOne;
-unsigned char *byteOnePointer = &byteOne;
 unsigned char byteTwo;
+
+//  - TODO -  Ask Asger about this -
+
+struct Command *commandPointer = &command;
+unsigned char *byteOnePointer = &byteOne;
 unsigned char *byteTwoPointer = &byteTwo;
+
 
 
 void setup()
@@ -34,16 +40,20 @@ void loop()
     byteOne = 50; 
     byteTwo = SPEED1;
     
-    readCommand(commandPointer, "PRE");
-    changeCommand(commandPointer, byteOnePointer, byteTwoPointer);
-    delay(500);
+    // TODO -- Ask Asger --
+    readCommand(&command, "PRE");
+
     
+    // readCommand(commandPointer, "PRE");
+    // changeCommand(commandPointer, byteOne, byteTwo);
+    changeCommand(&command, byteOne, byteTwo);
+    delay(500);
     
     byteOne = 60; 
     byteTwo = SPEED6;
 
-    readCommand(commandPointer, "POST");
-    changeCommand(commandPointer, byteOnePointer, byteTwoPointer);
+    readCommand(&command, "POST");
+    changeCommand(&command, byteOne, byteTwo);
 
     
     delay(500);
