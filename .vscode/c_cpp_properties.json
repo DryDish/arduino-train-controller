@@ -19,7 +19,12 @@
                 "/home/alex/.bin/arduino-1.8.13/hardware/arduino/avr/variants/standard",
                 "/home/alex/.bin/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
                 "/home/alex/.bin/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
-                "/home/alex/.bin/arduino-1.8.13/hardware/tools/avr/avr/include"
+                "/home/alex/.bin/arduino-1.8.13/hardware/tools/avr/avr/include",
+                "/home/alex/.bin/arduino-1.8.13/hardware/arduino/avr/**",
+                "/home/alex/.bin/arduino-1.8.13/hardware/tools/**",
+                "/home/alex/.bin/arduino-1.8.13/libraries/**",
+                "/home/alex/Arduino/libraries/**",
+                "/home/alex/.bin/arduino-1.8.13/tools/**"
             ],
             "forcedInclude": [
                 "/home/alex/.bin/arduino-1.8.13/hardware/arduino/avr/cores/arduino/Arduino.h"
