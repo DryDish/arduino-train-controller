@@ -1,5 +1,6 @@
 #ifndef C_REPO_WRITETOTRAIN_H
 #define C_REPO_WRITETOTRAIN_H
+#include "instruction.h"
 
 #ifdef __cplusplus
  extern "C" {
@@ -8,7 +9,7 @@
 
 #include "instruction.h"
 
-int writeToTrain(unsigned char pin, struct Instruction instruction);
+int writeToTrain(unsigned char pin, struct Instruction instruction, unsigned short message);
 
 
 #ifdef __cplusplus

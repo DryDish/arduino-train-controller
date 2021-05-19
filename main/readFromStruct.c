@@ -6,30 +6,30 @@ char* readStructData(struct Instruction instruction)
     *preamble1 = instruction.preamble[0];
     unsigned char preamble2[8];
     *preamble2 = instruction.preamble[1];
-    unsigned char engineNumber[4];
-    *engineNumber = instruction.engineNumber;
-    unsigned char command[8];
-    *command = instruction.command;
+    unsigned char byteOne[4];
+    *byteOne = instruction.byteOne;
+    unsigned char byteTwo[8];
+    *byteTwo = instruction.byteTwo;
     unsigned char checksum[8];
     *checksum = instruction.checksum;
 
-    //sscanf(engineNumber, "%d", &engineNumber); // Using sscanf
+    //sscanf(byteOne, "%d", &byteOne); // Using sscanf
 
 
     char* stringToReturn;
-    stringToReturn = malloc(14+strlen(preamble1)+strlen(preamble2)+20+strlen(engineNumber)+14+strlen(command)+15+strlen(checksum));
+    stringToReturn = malloc(14+strlen(preamble1)+strlen(preamble2)+20+strlen(byteOne)+14+strlen(byteTwo)+15+strlen(checksum));
     strcpy(stringToReturn, "preamble is: ");
     strcat(stringToReturn, preamble1);
     strcat(stringToReturn, preamble2);
     strcat(stringToReturn, " engine number is: ");
-    strcat(stringToReturn, engineNumber);
-    strcat(stringToReturn, " command is: ");
-    strcat(stringToReturn, command);
+    strcat(stringToReturn, byteOne);
+    strcat(stringToReturn, " byteTwo is: ");
+    strcat(stringToReturn, byteTwo);
     strcat(stringToReturn, " checksum is: ");
     strcat(stringToReturn, checksum);
     //printf(stringToReturn);
 
     return stringToReturn;
-    //return "The preamble is : " , (preamble1 + preamble2) , " engineNumber is: " , engineNumber , " command is: ", command ," checksum is: ", checksum;
+    //return "The preamble is : " , (preamble1 + preamble2) , " byteOne is: " , byteOne , " byteTwo is: ", byteTwo ," checksum is: ", checksum;
 }
 */

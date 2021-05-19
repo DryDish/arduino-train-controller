@@ -1,7 +1,6 @@
 {
-    "programmer": "AVRISP mkII",
     "board": "arduino:avr:uno",
-    "port": "/dev/ttyACM0",
+    "programmer": "arduino:avrispmkii",
     "sketch": "main/main.ino",
-    "output": "/home/alex/.arduino15/output"
+    "port": "/dev/ttyACM0"
 }
