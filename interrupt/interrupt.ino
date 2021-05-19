@@ -1,6 +1,6 @@
+#include "definitions.h"
 
 #define dirpin     2                   // sense for direction
-#define soundpin   3                   // sense for sound
 #define DCC_PIN    4                   // Arduino pin for DCC out 
 #define sw101      8                   // switch 101 turn when low
 #define sw102      9                   // switch 102 turn when low
@@ -48,7 +48,6 @@ ISR(TIMER2_OVF_vect);
 void checkshift();
 void shift101();
 void shift102();
-void checksound();
 void setup(void); 
 void loop(void); 
 void assemble_dcc_msg(); 
@@ -67,7 +66,7 @@ void SetupTimer2()
             0         0         0       Timer/Counter stopped 
             0         0         1       No Prescaling
             0         1         0       Prescaling by 8
-            0         0         0       Prescaling by 32
+            0         1         1       Prescaling by 32
             1         0         0       Prescaling by 64
             1         0         1       Prescaling by 128
             1         1         0       Prescaling by 256
@@ -138,7 +137,7 @@ ISR(TIMER2_OVF_vect) //Timer2 overflow interrupt vector handler
                  //Serial.println();
               }
               else  
-              {  // send separtor and advance to next byte
+              {  // send separator and advance to next byte
                  state = SEPERATOR ;
               }
            }
@@ -247,46 +246,16 @@ void shift102()
   }
 } // end shift102
 
-void checksound()
-{
-   
-   int j=digitalRead(soundpin);
-   
-   if(sound)
-   {
-     if(j==HIGH)
-     {
-       data=128;
-       sound=false;
-       digitalWrite(ledpin,LOW);
-       assemble_dcc_msg();
-       delay(100);
-     }
-   }
-   else
-   {
-     if(j==LOW)
-     {
-       data=129;
-       sound=true;
-       digitalWrite(ledpin,HIGH);
-       assemble_dcc_msg();
-       delay(100);
-     }
-   }
-} // end checksound
-
 
 void setup(void) 
 {
   Serial.begin(115200);
   pinMode(dirpin,INPUT_PULLUP);         // pin 2
-  pinMode(soundpin,INPUT_PULLUP);       // pin 3
   pinMode(DCC_PIN,OUTPUT);              // pin 4 this is for the DCC Signal
   pinMode(ledpin,OUTPUT);               // pin 13 the onboard LED
   pinMode(sw101,INPUT_PULLUP);          // pin 8 switch 101
   pinMode(sw102,INPUT_PULLUP);          // pin 9 switch 102
-  SetupTimer2(); // Start the timer  
+  SetupTimer2();                        // Start the timer  
   delay(100);
 } // end setup
 
@@ -294,7 +263,6 @@ void loop(void)
 {
     int i=digitalRead(dirpin);
  
-   checksound();
    checkshift();
  
    if(i==HIGH)
