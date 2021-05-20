@@ -1,4 +1,4 @@
-#include "definitions.h"
+//#include "definitions.h"
 
 #define dirpin     2                   // sense for direction
 #define DCC_PIN    4                   // Arduino pin for DCC out 

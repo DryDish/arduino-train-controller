@@ -3,15 +3,25 @@
 
 // These externs fix the missing declaration errors
 // It essentially promises the compiler that they are/will be filled soon
+// WIP do not use yet
+
 /*
-extern int TIMSK2;
-extern int TCCR2A;
-extern int TCCR2B;
-extern int TOIE2;
-extern int TCNT2;
+unsigned char TIMSK2;
+unsigned char TCCR2A;
+unsigned char TCCR2B;
+unsigned char TOIE2;
+unsigned char TCNT2;
+
 */
 
+// For the interrupts
+#define TIMER_SHORT 0x8D               // 58usec pulse length 141 255-141=114
+#define TIMER_LONG  0x1B               // 116usec pulse length 27 255-27 =228
+
 // Static variables
+#define DCC_PIN 4
+
+
 #define BLANK_PREAMBLE 0x0000
 #define BLANK_BYTE_ONE 0
 #define BLANK_BYTE_TWO 0

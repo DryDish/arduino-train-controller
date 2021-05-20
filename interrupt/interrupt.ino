@@ -2,6 +2,7 @@
 #include "command.h"
 #include "changeCommand.h"
 #include "readCommand.h"
+#include "setupTimer2.h"
 
 
 struct Command command =
@@ -17,7 +18,6 @@ struct Command command =
 };
 
 
-
 unsigned char byteOne;
 unsigned char byteTwo;
 
@@ -28,10 +28,13 @@ unsigned char *byteOnePointer = &byteOne;
 unsigned char *byteTwoPointer = &byteTwo;
 
 
-
 void setup()
 {
     Serial.begin(9600);
+    pinMode(DCC_PIN,OUTPUT);              // pin 4 this is for the DCC Signal
+    pinMode(LED_BUILTIN,OUTPUT);               // pin 13 the onboard LED
+    //setupTimer2();
+    delay(100);
 }
 
 void loop()
@@ -56,5 +59,11 @@ void loop()
     changeCommand(&command, byteOne, byteTwo);
 
     
+    delay(500);
+
+    Serial.print("timer is: ");
+    Serial.print(TCNT2);
+    Serial.println();
+
     delay(500);
 }
