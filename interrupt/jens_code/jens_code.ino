@@ -250,28 +250,21 @@ void shift102()
 void setup(void) 
 {
   Serial.begin(9600);
-  pinMode(dirpin,INPUT_PULLUP);         // pin 2
   pinMode(DCC_PIN,OUTPUT);              // pin 4 this is for the DCC Signal
   pinMode(ledpin,OUTPUT);               // pin 13 the onboard LED
-  pinMode(sw101,INPUT_PULLUP);          // pin 8 switch 101
-  pinMode(sw102,INPUT_PULLUP);          // pin 9 switch 102
   SetupTimer2();                        // Start the timer  
   delay(100);
 } // end setup
 
 void loop(void) 
 {
-    int i=digitalRead(dirpin);
- 
-   checkshift();
- 
-   if(i==HIGH)
-     data = 0x49;
-   else
-     data = 0x69;
-   addr = locoAdr;  
-   assemble_dcc_msg();
-   delay(100);	
+  
+  if (TCNT2 > 230)
+  {
+    Serial.print("Timer is: ");
+    Serial.println(TCNT2);
+  }
+
 } // end loop
 
 

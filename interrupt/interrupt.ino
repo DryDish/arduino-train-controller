@@ -28,12 +28,24 @@ unsigned char *byteOnePointer = &byteOne;
 unsigned char *byteTwoPointer = &byteTwo;
 
 
+ISR(TIMER2_OVR_vect)
+{
+    Serial.println();
+    Serial.println("--- hello from interrupt! ---");
+    TCNT2 = TIMER_SHORT;
+}
+
+
 void setup()
 {
     Serial.begin(9600);
     pinMode(DCC_PIN,OUTPUT);              // pin 4 this is for the DCC Signal
-    pinMode(LED_BUILTIN,OUTPUT);               // pin 13 the onboard LED
-    //setupTimer2();
+    pinMode(LED_BUILTIN,OUTPUT);          // pin 13 the onboard LED
+    Serial.print("setup Start!");
+    delay(100);
+    setupTimer2();
+    Serial.print("setup Complete!");
+    Serial.println();
     delay(100);
 }
 
@@ -59,11 +71,5 @@ void loop()
     changeCommand(&command, byteOne, byteTwo);
 
     
-    delay(500);
-
-    Serial.print("timer is: ");
-    Serial.print(TCNT2);
-    Serial.println();
-
     delay(500);
 }
