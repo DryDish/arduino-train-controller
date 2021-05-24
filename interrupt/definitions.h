@@ -9,7 +9,7 @@
 #define DCC_PIN 4
 
 
-#define BLANK_PREAMBLE 0x0000
+#define BLANK_PREAMBLE 0x00
 #define BLANK_BYTE_ONE 0
 #define BLANK_BYTE_TWO 0
 #define PREAMBLE 0xFFFF

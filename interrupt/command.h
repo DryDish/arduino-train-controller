@@ -3,7 +3,8 @@
 
 struct Command
 {
-    unsigned short preamble;
+    unsigned char preamble1;
+    unsigned char preamble2;
     unsigned char blank1;
     unsigned char byteOne;
     unsigned char blank2;
