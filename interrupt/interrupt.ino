@@ -18,10 +18,10 @@ struct Command command =
 };
 
 
-unsigned char byteOne;
-unsigned char byteTwo;
-bool flag = false;
+unsigned char byteOne = 0;
+unsigned char byteTwo = 0;
 bool hardStop = false;
+int counter = 0;
 
 ISR(TIMER2_OVF_vect)
 {
@@ -50,18 +50,21 @@ void loop()
     
     readCommand(&command, "BEFORE");
     hardStop = true;
-    delay(10);
+
     changeCommand(&command, &byteOne, &byteTwo);
+
     readCommand(&command, "AFTER ");
-    
-    byteOne = 60; 
+
+    byteOne = 60;
     byteTwo = SPEED6;
-    
+
     readCommand(&command, "BEFORE");
     hardStop = true;
-    delay(10);
+
     changeCommand(&command, &byteOne, &byteTwo);
+
     readCommand(&command, "AFTER ");
+    Serial.println(++counter);
 
     delay(1000);
 }
