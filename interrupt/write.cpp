@@ -1,8 +1,8 @@
 #include "write.h"
-bool bitIs1;
+bool bitIsOne;
 
-void writeBit()
-{
+void writeBit() // Work In Progress, do not try to use it yet
+{   /*
     unsigned char lastTimer;
     bool secondInterrupt = false;
     if (secondInterrupt) 
@@ -18,7 +18,7 @@ void writeBit()
     }
 
 
-    if (bitIs1)  
+    if (bitIsOne)  
     {  // data = 1 short pulse
         TCNT2+=TIMER_SHORT;
         lastTimer=TIMER_SHORT;
@@ -30,6 +30,7 @@ void writeBit()
         lastTimer = TIMER_LONG;
         // Serial.print('0');
     }
+    */
 }
 
 
