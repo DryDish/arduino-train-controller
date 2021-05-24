@@ -1,19 +1,6 @@
 #ifndef TRAIN_CODE_C_DEFINITIONS
 #define TRAIN_CODE_C_DEFINITIONS
 
-// These externs fix the missing declaration errors
-// It essentially promises the compiler that they are/will be filled soon
-// WIP do not use yet
-
-/*
-unsigned char TIMSK2;
-unsigned char TCCR2A;
-unsigned char TCCR2B;
-unsigned char TOIE2;
-unsigned char TCNT2;
-
-*/
-
 // For the interrupts
 #define TIMER_SHORT 0x8D               // 58usec pulse length 141 255-141=114
 #define TIMER_LONG  0x1B               // 116usec pulse length 27 255-27 =228
@@ -49,8 +36,3 @@ unsigned char TCNT2;
 
 
 #endif // TRAIN_CODE_C_DEFINITIONS
-
-
-
-
-

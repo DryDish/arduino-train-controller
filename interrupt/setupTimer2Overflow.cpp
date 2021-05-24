@@ -1,14 +1,8 @@
-#include "setupTimer2.h"
+#include "setupTimer2Overflow.h"
 
 
-void setupTimer2()
+void setupTimer2Overflow()
 {
-  noInterrupts();
-
-  Serial.println("Entered setupTimer");
-  delay(200);
-
-  //Timer2 Settings: Timer Prescaler /8, mode 0
   //Timer clock = 16MHz/8 = 2MHz oder 0,5usec
   /*         bit 2     bit 1     bit0
               0         0         0       Timer/Counter stopped 
@@ -20,17 +14,10 @@ void setupTimer2()
               1         1         0       Prescaling by 256
               1         1         1       Prescaling by 1024
   */
-  
-  TCCR2A = 0; //page 203 - 206 ATmega328/P
-  TCCR2B = 2; //Page 206
 
-  Serial.println("continuing setupTimer");
-  delay(200);
+  TCCR2A |= 0;           //page 203 - 206 ATmega328/P
+  TCCR2B |= 2;           //Page 206
   
   TIMSK2 = 1 << TOIE2;   //Timer2 Overflow Interrupt Enable - page 211 ATmega328/P   
   TCNT2 = TIMER_SHORT;   //load the timer for its first cycle
-
-  Serial.println("Exiting setupTimer");
-
-  interrupts();
 } 
