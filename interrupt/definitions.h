@@ -9,10 +9,10 @@
 #define DCC_PIN 4
 
 
-#define BLANK_PREAMBLE 0x00
-#define BLANK_BYTE_ONE 0
-#define BLANK_BYTE_TWO 0
-#define PREAMBLE 0xFFFF
+#define BLANK_PREAMBLE 0xFF
+#define BLANK_BYTE_ONE 1
+#define BLANK_BYTE_TWO 1
+#define PREAMBLE 0xFF
 #define SEPARATOR 0
 #define END_OF_MESSAGE 1
 

@@ -1,7 +1,55 @@
 #include "write.h"
-bool bitIsOne;
 
-void writeBit( bool bitIsOne ) // Work In Progress, do not try to use it yet
+// revert to c?
+void convertToBinaryAndSend(unsigned char byte, unsigned char size, bool *bitIsOne, bool *hasBit)
+{
+    unsigned char n;
+    unsigned char c;
+    unsigned char k;
+    n = byte;
+    for (c = size; c > 0; c--) //decrement 8 times (8 is 1 byte, the size of a byte)
+    {
+        k = n >> c-1;       //right shift by c ( -1 to correct the bit placement)
+        if (k & 1)          // if the value after right shifting is 1 in position 1 then print 1
+        {
+            *bitIsOne = true;
+            //Serial.print("1");
+            *hasBit = true;
+            delay(10);
+        }
+        else                // if the value after right shifting is 0 on position 1 then print 1
+        {
+            *bitIsOne = false;
+            *hasBit = true;
+            delay(10);
+            //Serial.print("0");  
+            //size -= 1;
+        }
+    }
+    //Serial.print("\n");
+}
+
+
+void sendCommand(struct Command *command, bool *bitIsOne, bool *hasBit)
+{
+    for (char i = 0; i < 3; i++)
+    {
+        convertToBinaryAndSend(command->preamble1, 8, bitIsOne, hasBit);
+        convertToBinaryAndSend(command->preamble2, 8, bitIsOne, hasBit);
+        convertToBinaryAndSend(command->blank1, 1, bitIsOne, hasBit);
+        convertToBinaryAndSend(command->byteOne, 8, bitIsOne, hasBit);
+        convertToBinaryAndSend(command->blank2, 1, bitIsOne, hasBit);
+        convertToBinaryAndSend(command->byteTwo, 8, bitIsOne, hasBit);
+        convertToBinaryAndSend(command->blank3, 1, bitIsOne, hasBit);
+        convertToBinaryAndSend(command->checksum, 8, bitIsOne, hasBit);
+        convertToBinaryAndSend(command->endChar, 1, bitIsOne, hasBit);
+    }
+        
+}
+
+/*
+
+void writeBit( bool *bitIsOne ) // Work In Progress, do not try to use it yet
 {  
     unsigned char lastTimer;
     bool secondInterrupt = false;
@@ -34,69 +82,45 @@ void writeBit( bool bitIsOne ) // Work In Progress, do not try to use it yet
     }
 }
 
-
-
-void convertByteToBinary(unsigned char *byte, unsigned short *position)
-{
-    unsigned char n;
-    unsigned char c;
-    unsigned char k;
-    n = *byte;
-    for (c = *position; c > 0; c--) //decrement 8 times (8 is 1 byte, the size of a byte)
-    {
-        k = n >> c-1;         //right shift by c ( -1 to correct the bit placement)
-        if (k & 1)          // if the value after right shifting is 1 in position 1 then print 1
-        {
-            writeBit(true);
-            //Serial.print("1");
-            *position -= 1;
-        }
-        else 
-        {
-            writeBit(false);
-            //Serial.print("0");  // if the value after right shifting is 0 on position 1 then print 1
-            *position -= 1;
-        }
-    }
-    Serial.print("\n");
-}
-
-void convertPositionsToBinary(unsigned char *byte, unsigned short *position)
+void convertPositionsToBinary(unsigned char *byte, unsigned short *position, bool *bitIsOne)
 {
     unsigned char n = *byte;
     unsigned char c = *position;
     unsigned char k;
 
-    k = n >> c-1;         //right shift by c ( -1 to correct the bit placement)
-    if (k & 1)          // if the value after right shifting is 1 in position 1 then print 1
+    k = n >> c-1;           //right shift by c ( -1 to correct the bit placement)
+    if (k & 1)              // if the value after right shifting is 1 in position 1 then print 1
     {
-        Serial.print("1");
+        *bitIsOne = true;
         *position -= 1;
     }
-    else 
+    else                    // if the value after right shifting is 0 on position 1 then print 1
     {
-        Serial.print("0");  // if the value after right shifting is 0 on position 1 then print 1
+        *bitIsOne = false;
         *position -= 1;
     }
-    Serial.print("\n");
+    //Serial.print("\n");
 }
 
-void convertBitToBinary(unsigned char *byte)
+void convertBitToBinary(unsigned char *byte, bool *bitIsOne)
 {
     unsigned char n;
     unsigned char c;
     unsigned char k;
     n = *byte;
     k = n;              
-    if (k & 1)          // if the value after right shifting is 1 in position 1 then print 1
+    if (k & 1)              // if the value after right shifting is 1 in position 1 then print 1
     {
-        writeBit(true);
+        *bitIsOne = true;
+        delay(10);
         //Serial.print("1");
     }
     else 
     {
-        writeBit(false);
+        *bitIsOne = false;
+        delay(10);
         //Serial.print("0");  // if the value after right shifting is 0 on position 1 then print 1
     }
     Serial.print("\n");
 }
+*/

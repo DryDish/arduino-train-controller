@@ -5,6 +5,18 @@
 #include "setupTimer2Overflow.h"
 #include "write.h"
 
+struct Command blankCommand =
+{
+        PREAMBLE,           // preamble part 1
+        PREAMBLE,           // preamble part 2
+        SEPARATOR,          // -- Separating bit --
+        BLANK_BYTE_ONE,     // Engine Number
+        SEPARATOR,          // -- Separating bit --
+        BLANK_BYTE_TWO,     // byteTwo
+        SEPARATOR,          // -- Separating bit --
+        blankCommand.byteOne ^ blankCommand.byteTwo,  // Checksum
+        END_OF_MESSAGE        // --- End of message bit ---
+};
 
 struct Command command =
 {
@@ -19,22 +31,58 @@ struct Command command =
         END_OF_MESSAGE        // --- End of message bit ---
 };
 
-
 unsigned char byteOne = 40;
 unsigned char byteTwo = SPEED11;
-bool hardStop = false;
-int counter = 0;
+unsigned char counter;
+
+//unsigned char position = 0;
+bool bitIsOne = false;
+bool hasBit = false;
 
 ISR(TIMER2_OVF_vect)
 {
+    unsigned char lastTimer;
+    bool secondInterrupt = false;
+    if (secondInterrupt) 
+    {  // for every second interupt just toggle signal
+        digitalWrite(DCC_PIN,1);
+        secondInterrupt = false;    
+        TCNT2 += lastTimer;
+        //Serial.print("1");
+    }
+    else  
+    {  // != every second interrupt, advance bit or state
+        digitalWrite(DCC_PIN,0);
+        secondInterrupt = true;
+        //Serial.print("0");
+    }
     
-    if (hardStop == true)
+    while (hasBit)
     {
-        byteTwo = HARDSTOP;
-        hardStop = false;
-        Serial.println(TCNT2);
-    }  
-    TCNT2 = TIMER_SHORT;
+        if (bitIsOne)  
+        {  // data = 1 short pulse
+            TCNT2+=TIMER_SHORT;
+            lastTimer=TIMER_SHORT;
+            //Serial.print('1');
+            bitIsOne = false;
+            hasBit = false;
+            counter++;
+        }
+        else  
+        {   // data = 0 long pulse
+            TCNT2 += TIMER_LONG; 
+            lastTimer = TIMER_LONG;
+            //Serial.print('0');
+            hasBit = false;
+            counter++;
+        }
+        if (counter > 7)
+        {
+            Serial.println();
+            counter = 0;
+        }
+    }
+
 }
 
 void setup()
@@ -47,14 +95,20 @@ void setup()
     Serial.println("Setup complete!\n");
 }
 
-unsigned short position = 7;
-
 void loop()
 {
-    
+    /*
     byteOne = 50;
     byteTwo = SPEED1;
-    changeCommand(&command, &byteOne, &byteTwo);
+    */
+    changeCommandTrain(&command, &byteOne, &byteTwo);
+    //changeCommandAccessory(&command, 101, 1, 1);
+    
+    
+    sendCommand(&command, &bitIsOne, &hasBit);
+
+    delay(1000);
+    Serial.println("\n-----------");
     /*
     readCommand(&command, "BEFORE");
     hardStop = true;
@@ -68,44 +122,10 @@ void loop()
 
     readCommand(&command, "BEFORE");
     hardStop = true;
-    
+
     changeCommand(&command, &byteOne, &byteTwo);
 
     //readCommand(&command, "AFTER ");
     */
-    // -- read the entire byte in sequence --
-    position = 8;
-    convertByteToBinary(&command.preamble1, &position);
-    position = 8;
-    convertByteToBinary(&command.preamble2, &position);
 
-    convertBitToBinary(&command.blank1);
-    position = 8;
-    convertByteToBinary(&command.byteOne, &position);
-
-    convertBitToBinary(&command.blank2);
-    position = 8;
-    convertByteToBinary(&command.byteTwo, &position);
-    
-    convertBitToBinary(&command.blank3);
-    position = 8;
-    convertByteToBinary(&command.checksum, &position);
-    convertBitToBinary(&command.endChar);
-    /*
-    position = 8;
-    Serial.print("Position at start: ");
-    Serial.println(position);
-    convertPositionsToBinary(&command.byteOne, &position);   // 8
-    convertPositionsToBinary(&command.byteOne, &position);   // 7
-    convertPositionsToBinary(&command.byteOne, &position);   // 6
-    convertPositionsToBinary(&command.byteOne, &position);   // 5
-    convertPositionsToBinary(&command.byteOne, &position);   // 4
-    convertPositionsToBinary(&command.byteOne, &position);   // 3
-    convertPositionsToBinary(&command.byteOne, &position);   // 2
-    convertPositionsToBinary(&command.byteOne, &position);   // 1
-    Serial.print("Position at end: ");
-    Serial.println(position);
-    */
-    Serial.println("-----------");
-    delay(0);
 }
