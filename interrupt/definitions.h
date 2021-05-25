@@ -8,6 +8,13 @@
 // Static variables
 #define DCC_PIN 4
 
+struct Node {
+    unsigned short byteOne;
+    unsigned short byteTwo;
+    bool *bitIsOne;
+    bool *hasBit;
+    struct Node *next;
+};
 
 #define BLANK_PREAMBLE 0xFF
 #define BLANK_BYTE_ONE 1

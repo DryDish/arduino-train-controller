@@ -4,6 +4,7 @@
 #include "readCommand.h"
 #include "setupTimer2Overflow.h"
 #include "write.h"
+#include "linkedList.h"
 
 struct Command blankCommand =
 {
@@ -98,35 +99,20 @@ void setup()
 
 void loop()
 {
-    /*
     byteOne = 50;
     byteTwo = SPEED1;
-    */
+    
     changeCommandTrain(&command, &byteOne, &byteTwo);
+    readCommand(&command, "Bfore list");
     //changeCommandAccessory(&command, 101, 1, 1);
-
-    sendCommand(&command, &bitIsOne, &hasBit);
-    readCommand(&command, "who cares");
+    addToListEnd(135, 245, &bitIsOne, &hasBit);
+    Node *item = retreiveFirstItemInList();
+    byteOne = item->byteOne;
+    byteTwo = item->byteTwo;
+    changeCommandTrain(&command, &byteOne, &byteTwo);
+    //sendCommand(&command, &bitIsOne, &hasBit);
+    readCommand(&command, "After list");
 
     delay(1000);
     Serial.println("\n-----------");
-    /*
-    readCommand(&command, "BEFORE");
-    hardStop = true;
-
-    changeCommand(&command, &byteOne, &byteTwo);
-
-    readCommand(&command, "AFTER ");
-
-    byteOne = 60;
-    byteTwo = SPEED6;
-
-    readCommand(&command, "BEFORE");
-    hardStop = true;
-
-    changeCommand(&command, &byteOne, &byteTwo);
-
-    //readCommand(&command, "AFTER ");
-    */
-
 }
