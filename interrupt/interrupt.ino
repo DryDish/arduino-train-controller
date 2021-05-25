@@ -35,14 +35,13 @@ unsigned char byteOne = 40;
 unsigned char byteTwo = SPEED11;
 unsigned char counter;
 
-//unsigned char position = 0;
+bool secondInterrupt = false;
 bool bitIsOne = false;
 bool hasBit = false;
 
 ISR(TIMER2_OVF_vect)
 {
     unsigned char lastTimer;
-    bool secondInterrupt = false;
     if (secondInterrupt) 
     {  // for every second interupt just toggle signal
         digitalWrite(DCC_PIN,1);
@@ -67,6 +66,7 @@ ISR(TIMER2_OVF_vect)
             bitIsOne = false;
             hasBit = false;
             counter++;
+            
         }
         else  
         {   // data = 0 long pulse
@@ -78,9 +78,10 @@ ISR(TIMER2_OVF_vect)
         }
         if (counter > 7)
         {
-            Serial.println();
+            //Serial.println();
             counter = 0;
         }
+
     }
 
 }
@@ -103,9 +104,9 @@ void loop()
     */
     changeCommandTrain(&command, &byteOne, &byteTwo);
     //changeCommandAccessory(&command, 101, 1, 1);
-    
-    
+
     sendCommand(&command, &bitIsOne, &hasBit);
+    readCommand(&command, "who cares");
 
     delay(1000);
     Serial.println("\n-----------");
