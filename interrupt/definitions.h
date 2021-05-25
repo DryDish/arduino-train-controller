@@ -8,10 +8,6 @@
 // Static variables
 #define DCC_PIN 4
 
-// light addresses mapped up starting with 12 and going down the track on the schematic
-const unsigned short lightAddresses[] = {12, 52, 21, 51, 62, 22, 61, 11, 14, 42, 82, 81, 31, 32, 91, 92, 111, 112, 102, 101, 122, 121, 131, 132, 151, 152, 142, 141};
-
-
 struct Node {
     unsigned short byteOne;
     unsigned short byteTwo;
