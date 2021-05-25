@@ -73,9 +73,9 @@ void loop()
 
     //readCommand(&command, "AFTER ");
     */
-    /* -- read the entire byte in sequence --
+    // -- read the entire byte in sequence --
     position = 8;
-    convertByteToBinary(&command.byteOne, &position);
+    convertByteToBinary(&command.preamble1, &position);
     position = 8;
     convertByteToBinary(&command.preamble2, &position);
 
@@ -91,7 +91,7 @@ void loop()
     position = 8;
     convertByteToBinary(&command.checksum, &position);
     convertBitToBinary(&command.endChar);
-    */
+    /*
     position = 8;
     Serial.print("Position at start: ");
     Serial.println(position);
@@ -105,6 +105,7 @@ void loop()
     convertPositionsToBinary(&command.byteOne, &position);   // 1
     Serial.print("Position at end: ");
     Serial.println(position);
+    */
     Serial.println("-----------");
-    delay(1000);
+    delay(0);
 }
