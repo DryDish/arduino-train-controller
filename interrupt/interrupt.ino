@@ -1,22 +1,23 @@
 #include "definitions.h"
+#include "bytesAndbools.h"
 #include "command.h"
 #include "changeCommand.h"
 #include "readCommand.h"
 #include "setupTimer2Overflow.h"
-#include "write.h"
+#include "sendCommand.h"
 #include "linkedList.h"
 
 struct Command blankCommand =
-{
-        PREAMBLE,           // preamble part 1
-        PREAMBLE,           // preamble part 2
-        SEPARATOR,          // -- Separating bit --
-        BLANK_BYTE_ONE,     // Engine Number
-        SEPARATOR,          // -- Separating bit --
-        BLANK_BYTE_TWO,     // byteTwo
-        SEPARATOR,          // -- Separating bit --
-        blankCommand.byteOne ^ blankCommand.byteTwo,  // Checksum
-        END_OF_MESSAGE        // --- End of message bit ---
+    {
+        PREAMBLE,                                    // preamble part 1
+        PREAMBLE,                                    // preamble part 2
+        SEPARATOR,                                   // -- Separating bit --
+        BLANK_BYTE_ONE,                              // Engine Number
+        SEPARATOR,                                   // -- Separating bit --
+        BLANK_BYTE_TWO,                              // byteTwo
+        SEPARATOR,                                   // -- Separating bit --
+        blankCommand.byteOne ^ blankCommand.byteTwo, // Checksum
+        END_OF_MESSAGE                               // --- End of message bit ---
 };
 
 struct Command command =
@@ -32,13 +33,10 @@ struct Command command =
         END_OF_MESSAGE        // --- End of message bit ---
 };
 
-unsigned char byteOne = 40;
-unsigned char byteTwo = SPEED11;
-unsigned char counter;
 
+
+unsigned char counter;
 bool secondInterrupt = false;
-bool bitIsOne = false;
-bool hasBit = false;
 
 ISR(TIMER2_OVF_vect)
 {
@@ -86,7 +84,7 @@ ISR(TIMER2_OVF_vect)
     }
 
 }
-
+unsigned char timerKinda = 0;
 void setup()
 {
     Serial.begin(9600);
@@ -94,25 +92,47 @@ void setup()
     setupTimer2Overflow();
     pinMode(DCC_PIN, OUTPUT);                   // pin 4 this is for the DCC Signal
     pinMode(LED_BUILTIN, OUTPUT);
+
+
+    addToList(135, 245);
+    addToList(136, 246);
+    addToList(137, 247);
+    addToList(138, 248);
+    addToList(139, 249);
+    addToList(140, 250);
     Serial.println("Setup complete!\n");
 }
 
-void loop()
-{
-    byteOne = 50;
-    byteTwo = SPEED1;
-    
-    changeCommandTrain(&command, &byteOne, &byteTwo);
-    readCommand(&command, "Bfore list");
-    //changeCommandAccessory(&command, 101, 1, 1);
-    addToListEnd(135, 245, &bitIsOne, &hasBit);
-    Node *item = retreiveFirstItemInList();
-    byteOne = item->byteOne;
-    byteTwo = item->byteTwo;
-    changeCommandTrain(&command, &byteOne, &byteTwo);
-    //sendCommand(&command, &bitIsOne, &hasBit);
-    readCommand(&command, "After list");
 
-    delay(1000);
+
+void loop()
+{        
+    if ( timerKinda > 15)
+    {
+        changeCommandAccessory(&command, 276, 1, 1);
+        addToList(command.byteOne, command.byteTwo);
+        timerKinda = 0;
+    }
+    timerKinda++;
+
+    regenerateCommand();
+    sendCommand(&command);
+    
     Serial.println("\n-----------");
+    delay(400);
+}
+
+unsigned char regenerateCommand()
+{
+    if (isEmpty())
+    {
+        command = blankCommand;
+        readCommand(&command, "is empty");
+        return 1;
+    }
+    Node *item = retreiveFirstItemInList();
+    changeCommandTrain(&command, item->byteOne, item->byteTwo);
+    deleteFirstListItem();
+    readCommand(&command, "not empty");
+    return 0;
 }

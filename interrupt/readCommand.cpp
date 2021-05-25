@@ -7,7 +7,7 @@
 void readCommand(struct Command *commandPointer, const char *prefix)
 {
     Serial.print(prefix);
-    Serial.print(" edit < byteOne: ");
+    Serial.print(" < byteOne: ");
     Serial.print(commandPointer -> byteOne);
     Serial.print(" byteTwo: ");
     Serial.print(commandPointer -> byteTwo);

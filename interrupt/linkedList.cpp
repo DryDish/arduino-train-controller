@@ -14,44 +14,48 @@ bool isEmpty()
     return (head == NULL);
 }
 
-void addToListEnd(unsigned short byteOne, unsigned short byteTwo, bool *bitIsOne, bool *hasBit)
+void addToList(unsigned short byteOne, unsigned short byteTwo)
 {
-    Node *newNode = NULL;
-    newNode = (Node *)malloc(sizeof(struct Node));
+    struct Node *newNode = NULL;
+    newNode = (struct Node *)malloc(sizeof(struct Node));
     newNode->byteOne = byteOne;
     newNode->byteTwo = byteTwo;
-    newNode->bitIsOne = bitIsOne;
-    newNode->hasBit = hasBit;
 
     if (isEmpty())
     {
         head = newNode;
         last = newNode;
-    } else {
+    }
+    else
+    {
         last->next = newNode;
         last = newNode;
     }
+    newNode->next = NULL;
 }
 
 
-void deleteFirstListElement()
+void deleteFirstListItem()
 {
-    Node *tempNode = NULL;
+    struct Node *tempNode = NULL;
     tempNode = head;
 
     if (head->next == NULL)
     {
+        head == NULL;
         last = NULL;
     }
     head = head->next;
 }
 
-Node* retreiveFirstItemInList() {
-    //start from the beginning
-    Node *tempNode = NULL;
-    if (head != NULL)
+struct Node* retreiveFirstItemInList() 
+{
+    struct Node *tempNode = NULL;
+    tempNode = head;
+    if (tempNode != NULL)
     {
         tempNode = head;
+        return tempNode;
     }
-    return tempNode;
+    return NULL;
 }
