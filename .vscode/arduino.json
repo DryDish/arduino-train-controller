@@ -2,6 +2,6 @@
     "board": "arduino:avr:uno",
     "programmer": "AVRISP mkII",
     "sketch": "interrupt/interrupt.ino",
-    "port": "/dev/ttyACM0",
+    "port": "/dev/ttyACM1",
     "output": "/home/alex/.arduino15/output"
 }

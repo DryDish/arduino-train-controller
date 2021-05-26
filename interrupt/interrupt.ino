@@ -42,7 +42,6 @@ unsigned short switchAddresses[16] = {221, 222, 234, 233, 224, 223, 231, 232, 24
 // This is the (fixed) address of the trains
 unsigned char trainNumbers[3] = {11, 8, 40}; 
 
-unsigned char counter;
 bool secondInterrupt = false;
 
 void addSensorPins();
@@ -74,8 +73,6 @@ ISR(TIMER2_OVF_vect)
             //Serial.print('1');
             bitIsOne = false;
             hasBit = false;
-            counter++;
-            
         }
         else  
         {   // data = 0 long pulse
@@ -83,12 +80,6 @@ ISR(TIMER2_OVF_vect)
             lastTimer = TIMER_LONG;
             //Serial.print('0');
             hasBit = false;
-            counter++;
-        }
-        if (counter > 7)
-        {
-            //Serial.println();
-            counter = 0;
         }
 
     }
@@ -116,7 +107,7 @@ void setup()
 // ----------------- START LOOP ------------------------
 
 void loop()
-{        
+{   
     if ( timerKinda > 15)
     {
         changeCommandAccessory(&command, 276, 1, 1);
@@ -124,12 +115,13 @@ void loop()
         timerKinda = 0;
     }
     timerKinda++;
-
-    regenerateCommand();
-    sendCommand(&command);
     
+    regenerateCommand();
+    readCommand(&command, "loop sent");
+    sendCommand(&command);
+
     Serial.println("\n-----------");
-    delay(0);
+    //delay(1000);
 }
 
 // ------------------- END LOOP -------------------------
@@ -143,13 +135,11 @@ unsigned char regenerateCommand()
     if (isEmpty())
     {
         command = blankCommand;
-        readCommand(&command, "is empty");
         return 1;
     }
     Node *item = retreiveFirstItemInList();
     changeCommandTrain(&command, item->byteOne, item->byteTwo);
     deleteFirstListItem();
-    readCommand(&command, "not empty");
     return 0;
 }
 

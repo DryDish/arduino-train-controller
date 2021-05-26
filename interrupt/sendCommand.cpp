@@ -15,14 +15,13 @@ void convertToBinaryAndSend(unsigned char byte, unsigned char size)
         {
             bitIsOne = true;
             hasBit = true;
-            //delay(10);
         }
         else                // if the value after right shifting is 0 on position 1 then print 1
         {
             bitIsOne = false;
             hasBit = true;
-            //delay(10);
         }
+        //delay(50);
     }
 }
 
