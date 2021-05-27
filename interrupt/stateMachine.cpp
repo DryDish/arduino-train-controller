@@ -1,20 +1,22 @@
 #include "stateMachine.h"
-/*
-unsigned char state;
 
-// unsigned int trackSensorAddresses[14][2] = {{13, 0}, {12, 0}, {11, 0}, {10, 0}, {9, 0}, {8, 0}, {7, 0}, {6, 0}, {5, 0}, {A0, 0}, {A1, 0}, {A2, 0}, {A3, 0}, {A4, 0}};
-
-void clearSensorCounters(unsigned int **trackSensorAddresses)
+// Had to set it to a static variable 14 or it wouldn't work.
+void clearSensorCounters(unsigned int trackSensorAddresses[14][2])
 {
-    for (unsigned short i = 0; i < (sizeof(trackSensorAddresses) / sizeof(trackSensorAddresses[0])); i++)
+    // Serial.print("Before clean");
+    // Serial.println(trackSensorAddresses[3][1]);
+    // Serial.println("entered loop");
+    for (unsigned short i = 0; i < 14; i++)
     {
         trackSensorAddresses[i][1] = 0;
     }
+    // Serial.print("After clean");
+    // Serial.println(trackSensorAddresses[3][1]);
 }
-
-void readSensorCounters(unsigned int **trackSensorAddresses)
+// Had to set it to a static variable 14 or it wouldn't work.
+void readSensorCounters(unsigned int (trackSensorAddresses[14][2]))
 {
-    for (short i = 0; i < (sizeof(trackSensorAddresses) / sizeof(trackSensorAddresses[0])); i++)
+    for (short i = 0; i < 14; i++)
     {
         Serial.print(trackSensorAddresses[i][0]);
         Serial.print(" - ");
@@ -22,11 +24,89 @@ void readSensorCounters(unsigned int **trackSensorAddresses)
     }
 }
 
-void stateMachine()
+void addCommandToList(struct Command *command, unsigned short address, unsigned char power, unsigned char direction)
 {
-    switch(state)
+    changeCommandAccessory(command, address, power, direction);
+    addToList(command->byteOne, command->byteTwo);
+}
+
+
+unsigned char state = ORANGE_WAITING;
+
+
+unsigned char advanceStateMachine(unsigned int trackSensorAddresses[14][2], struct Command *command)
+{
+    if (state == ORANGE_WAITING)
     {
-        
+        // Sensor 4
+        if (trackSensorAddresses[3][1] < 2)
+        {
+            return 0;
+        }
+        Serial.print("Sensor 4  -- index: ");
+        Serial.println(trackSensorAddresses[3][0]);
+
+        //readSensorCounters(trackSensorAddresses);
+        clearSensorCounters(trackSensorAddresses);
+        state = ORANGE_MOVING;
+        return 1;
+    }
+    else if (state == ORANGE_MOVING)
+    {
+        if (trackSensorAddresses[11][1] < 2 || trackSensorAddresses[7][1] < 2)
+        {
+            return 0;
+        }
+
+        Serial.print("Sensor 11 -- index: ");
+        Serial.println(trackSensorAddresses[11][0]);
+        Serial.print("Sensor 7  -- index: ");
+        Serial.println(trackSensorAddresses[7][0]);
+
+        //readSensorCounters(trackSensorAddresses);
+        // SOMETHING WEIRD HERE BOYS
+        addCommandToList(command, 241, 1, 1);
+        addCommandToList(command, 241, 0, 1);
+        // SOMETHING WEIRD HERE BOYS
+        addCommandToList(command, 249, 1, 0);
+        addCommandToList(command, 249, 0, 0);
+
+        addCommandToList(command, 101, 1, 0);
+
+        addCommandToList(command,141 , 1, 0);
+
+        addCommandToList(command, 42, 1, 1);
+
+        state = ORANGE_RETURNED;
+        return 2;
+    }
+    else if (state == ORANGE_RETURNED)
+    {
+        if (trackSensorAddresses[2][1] < 2)
+        {
+            return 0;
+        }
+
+        // SOMETHING WEIRD HERE BOYS
+        addCommandToList(command, 241, 1, 0);
+        addCommandToList(command, 241, 0, 0);
+        // SOMETHING WEIRD HERE BOYS
+        addCommandToList(command, 249, 1, 1);
+        addCommandToList(command, 249, 0, 1);
+
+        addCommandToList(command, 42, 1, 0);
+        addCommandToList(command, 101, 1, 1);
+        addCommandToList(command, 141, 1, 1);
+
+        // Documentation states that we should clear sensors, but we dont?
+        // I'll comment here a clear sensor method
+        clearSensorCounters(trackSensorAddresses);
+
+        state = ORANGE_WAITING;
+        return 3;
+    }
+    else 
+    {
+        return 4;
     }
 }
-*/

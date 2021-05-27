@@ -6,12 +6,15 @@
 // --- Does this benefit from being a pointer? should i pass by value? ---
 void readCommand(struct Command *commandPointer, const char *prefix)
 {
-    Serial.print(prefix);
-    Serial.print(" < byteOne: ");
-    Serial.print(commandPointer -> byteOne);
-    Serial.print(" byteTwo: ");
-    Serial.print(commandPointer -> byteTwo);
-    Serial.print(" checksum: ");
-    Serial.print(commandPointer -> checksum);
-    Serial.println(" >");
+    if (commandPointer->byteOne != 0)
+    {
+        Serial.print(prefix);
+        Serial.print(" < byteOne: ");
+        Serial.print(commandPointer -> byteOne);
+        Serial.print(" byteTwo: ");
+        Serial.print(commandPointer -> byteTwo);
+        Serial.print(" checksum: ");
+        Serial.print(commandPointer -> checksum);
+        Serial.println(" >");
+    }
 }

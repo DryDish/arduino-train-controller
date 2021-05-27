@@ -6,6 +6,7 @@
 #include "setupTimer2Overflow.h"
 #include "sendCommand.h"
 #include "linkedList.h"
+#include "stateMachine.h"
 
 struct Command blankCommand =
     {
@@ -107,21 +108,16 @@ void setup()
 // ----------------- START LOOP ------------------------
 
 void loop()
-{   
-    if ( timerKinda > 15)
-    {
-        changeCommandAccessory(&command, 276, 1, 1);
-        addToList(command.byteOne, command.byteTwo);
-        timerKinda = 0;
-    }
-    timerKinda++;
-    
+{
+    advanceStateMachine(trackSensorAddresses, &command);
+
     regenerateCommand();
-    readCommand(&command, "loop sent");
+    readCommand(&command, "the loop sent:");
     sendCommand(&command);
 
-    Serial.println("\n-----------");
-    //delay(1000);
+    //Serial.println("\n-----------");
+    
+    delay(0);
 }
 
 // ------------------- END LOOP -------------------------
@@ -187,3 +183,50 @@ void prepareTrackCommands()
         addToList(command.byteOne, command.byteTwo);
     }
 }
+/*
+// If you need to test the State Machine put this into main along with 
+// These two variables on the top of the file
+// -- TOP --
+// unsigned char counter = 0;
+// bool secondTime = false;
+// -- MAIN --
+if (counter == 75)
+{
+    if (!secondTime)
+    {
+        Serial.println("---------------");
+        Serial.println("entered counter - 1");
+        Serial.println("---------------");
+        trackSensorAddresses[3][1] = 3;
+    }
+
+}
+
+if (counter == 150)
+{
+    if (!secondTime)
+    {
+        Serial.println("---------------");
+        Serial.println("entered counter - 2");
+        Serial.println("---------------");
+        trackSensorAddresses[11][1] = 3;
+        trackSensorAddresses[7][1] = 3;
+    }
+
+}
+
+if (counter == 225)
+{
+    if (!secondTime)
+    {
+        Serial.println("---------------");
+        Serial.println("entered counter - 3");
+        Serial.println("---------------");
+        trackSensorAddresses[2][1] = 3;
+        counter = 0;
+        secondTime = true;
+    }
+}
+counter++;
+
+*/
