@@ -10,32 +10,32 @@
 
 struct Command blankCommand =
     {
-        PREAMBLE,                                    // preamble part 1
-        PREAMBLE,                                    // preamble part 2
-        SEPARATOR,                                   // -- Separating bit --
-        BLANK_BYTE_ONE,                              // Engine Number
-        SEPARATOR,                                   // -- Separating bit --
-        BLANK_BYTE_TWO,                              // byteTwo
-        SEPARATOR,                                   // -- Separating bit --
-        blankCommand.byteOne ^ blankCommand.byteTwo, // Checksum
-        END_OF_MESSAGE                               // --- End of message bit ---
+        PREAMBLE,                                       // preamble part 1
+        PREAMBLE,                                       // preamble part 2
+        SEPARATOR,                                      // -- Separating bit --
+        BLANK_BYTE_ONE,                                 // Engine Number
+        SEPARATOR,                                      // -- Separating bit --
+        BLANK_BYTE_TWO,                                 // byteTwo
+        SEPARATOR,                                      // -- Separating bit --
+        blankCommand.byteOne ^ blankCommand.byteTwo,    // Checksum
+        END_OF_MESSAGE                                  // --- End of message bit ---
 };
 
 struct Command command =
 {
-        PREAMBLE,           // preamble part 1
-        PREAMBLE,           // preamble part 2
-        SEPARATOR,          // -- Separating bit --
-        BLANK_BYTE_ONE,     // Engine Number
-        SEPARATOR,          // -- Separating bit --
-        BLANK_BYTE_TWO,     // byteTwo
-        SEPARATOR,          // -- Separating bit --
-        command.byteOne ^ command.byteTwo,  // Checksum
-        END_OF_MESSAGE        // --- End of message bit ---
+        PREAMBLE,                                       // preamble part 1
+        PREAMBLE,                                       // preamble part 2
+        SEPARATOR,                                      // -- Separating bit --
+        BLANK_BYTE_ONE,                                 // Engine Number
+        SEPARATOR,                                      // -- Separating bit --
+        BLANK_BYTE_TWO,                                 // byteTwo
+        SEPARATOR,                                      // -- Separating bit --
+        command.byteOne ^ command.byteTwo,              // Checksum
+        END_OF_MESSAGE                                  // --- End of message bit ---
 };
 
 // Pins for getting track sensor inputs
-unsigned int trackSensorAddresses[14][2] = {{13, 0}, {12, 0}, {11, 0}, {10, 0}, {9, 0}, {8, 0}, {7, 0}, {6, 0}, {5, 0}, {A0, 0}, {A1, 0}, {A2, 0}, {A3, 0}, {A4, 0}};
+unsigned int trackSensorAddresses[TOTAL_SENSORS][MAX_READINGS] = {{13, 0}, {12, 0}, {11, 0}, {10, 0}, {9, 0}, {8, 0}, {7, 0}, {6, 0}, {5, 0}, {A0, 0}, {A1, 0}, {A2, 0}, {A3, 0}, {A4, 0}};
 
 // Light addresses mapped up starting with 12 and going down the track on the schematic
 unsigned short lightAddresses[28] = {12, 52, 21, 51, 62, 22, 61, 11, 14, 42, 82, 81, 31, 32, 91, 92, 111, 112, 102, 101, 122, 121, 131, 132, 151, 152, 142, 141};

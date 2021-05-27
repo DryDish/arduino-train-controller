@@ -1,7 +1,7 @@
 #include "stateMachine.h"
 
 // Had to set it to a static variable 14 or it wouldn't work.
-void clearSensorCounters(unsigned int trackSensorAddresses[14][2])
+void clearSensorCounters(unsigned int trackSensorAddresses[TOTAL_SENSORS][MAX_READINGS])
 {
     // Serial.print("Before clean");
     // Serial.println(trackSensorAddresses[3][1]);
@@ -14,7 +14,7 @@ void clearSensorCounters(unsigned int trackSensorAddresses[14][2])
     // Serial.println(trackSensorAddresses[3][1]);
 }
 // Had to set it to a static variable 14 or it wouldn't work.
-void readSensorCounters(unsigned int (trackSensorAddresses[14][2]))
+void readSensorCounters(unsigned int (trackSensorAddresses[TOTAL_SENSORS][MAX_READINGS]))
 {
     for (short i = 0; i < 14; i++)
     {
@@ -34,7 +34,7 @@ void addCommandToList(struct Command *command, unsigned short address, unsigned 
 unsigned char state = ORANGE_WAITING;
 
 
-unsigned char advanceStateMachine(unsigned int trackSensorAddresses[14][2], struct Command *command)
+unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSORS][MAX_READINGS], struct Command *command)
 {
     if (state == ORANGE_WAITING)
     {

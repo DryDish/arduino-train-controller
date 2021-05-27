@@ -24,7 +24,7 @@ const unsigned char ORANGE_MOVING = 2;
 const unsigned char ORANGE_RETURNED = 3;
 
 
-unsigned char advanceStateMachine(unsigned int trackSensorAddresses[14][2], struct Command *command);
+unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSORS][MAX_READINGS], struct Command *command);
 
 
 #endif // TRAIN_CODE_C_STATE_MACHINE
