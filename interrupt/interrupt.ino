@@ -34,20 +34,24 @@ struct Command command =
         END_OF_MESSAGE        // --- End of message bit ---
 };
 
-// pins for getting track sensor inputs
+// Pins for getting track sensor inputs
 unsigned int trackSensorAddresses[14][2] = {{13, 0}, {12, 0}, {11, 0}, {10, 0}, {9, 0}, {8, 0}, {7, 0}, {6, 0}, {5, 0}, {A0, 0}, {A1, 0}, {A2, 0}, {A3, 0}, {A4, 0}};
+
 // Light addresses mapped up starting with 12 and going down the track on the schematic
 unsigned short lightAddresses[28] = {12, 52, 21, 51, 62, 22, 61, 11, 14, 42, 82, 81, 31, 32, 91, 92, 111, 112, 102, 101, 122, 121, 131, 132, 151, 152, 142, 141};
+
 // Switch addresses mapped up starting with 12 and going down the track on the schematic
 unsigned short switchAddresses[16] = {221, 222, 234, 233, 224, 223, 231, 232, 242, 250, 249, 241, 243, 251, 244, 252};
-// This is the (fixed) address of the trains
-unsigned char trainNumbers[3] = {11, 8, 40}; 
 
-bool secondInterrupt = false;
+// Static engine number of the trains
+unsigned char trainNumbers[3] = {11, 8, 40}; 
 
 void addSensorPins();
 void prepareTrackCommands();
+unsigned char regenerateCommand();
+void addCommandToListInSetup(struct Command *command, unsigned short address, unsigned char power, unsigned char direction);
 
+bool secondInterrupt = false;
 ISR(TIMER2_OVF_vect)
 {
     unsigned char lastTimer;
@@ -94,13 +98,19 @@ unsigned char timerKinda = 0;
 void setup()
 {
     Serial.begin(9600);
-    Serial.println("Setting up...");
+    Serial.print("Setting up...");
     setupTimer2Overflow();
     pinMode(DCC_PIN, OUTPUT);                   // pin 4 this is for the DCC Signal
     pinMode(LED_BUILTIN, OUTPUT);
-
     addSensorPins();
     prepareTrackCommands();
+
+    // Start all of the trains
+    for (short i = 0; i < (sizeof(trainNumbers) / sizeof(trainNumbers[0])); i++)
+    {
+        changeCommandTrain(&command, trainNumbers[i], SPEED8);
+        addToList(command.byteOne, command.byteTwo);
+    }
 
     Serial.println("Setup complete!\n");
 }
@@ -139,6 +149,11 @@ unsigned char regenerateCommand()
     return 0;
 }
 
+void addCommandToListInSetup(struct Command *command, unsigned short address, unsigned char power, unsigned char direction)
+{
+    changeCommandAccessory(command, address, power, direction);
+    addToList(command->byteOne, command->byteTwo);
+}
 
 // ----------------- SETUP METHODS ------------------------
 
@@ -182,6 +197,26 @@ void prepareTrackCommands()
         changeCommandAccessory(&command, switchAddresses[i], 1, 1);
         addToList(command.byteOne, command.byteTwo);
     }
+
+        addCommandToListInSetup(&command, 42, 1, 0);
+    
+        addCommandToListInSetup(&command, 101, 1, 1);
+        addCommandToListInSetup(&command, 141, 1, 1);
+
+        addCommandToListInSetup(&command, 223, 1, 0);
+        addCommandToListInSetup(&command, 224, 1, 1);
+        addCommandToListInSetup(&command, 223, 0, 0);
+        addCommandToListInSetup(&command, 224, 0, 1);
+
+        addCommandToListInSetup(&command, 233, 1, 1);
+        addCommandToListInSetup(&command, 234, 1, 1);
+        addCommandToListInSetup(&command, 233, 0, 1);
+        addCommandToListInSetup(&command, 234, 0, 1);
+        
+        addCommandToListInSetup(&command, 231, 1, 0);
+        addCommandToListInSetup(&command, 232, 1, 1);
+        addCommandToListInSetup(&command, 231, 0, 0);
+        addCommandToListInSetup(&command, 232, 0, 1);
 }
 /*
 // If you need to test the State Machine put this into main along with 
