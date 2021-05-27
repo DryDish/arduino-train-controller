@@ -3,20 +3,15 @@
 // Had to set it to a static variable 14 or it wouldn't work.
 void clearSensorCounters(unsigned int trackSensorAddresses[TOTAL_SENSORS][MAX_READINGS])
 {
-    // Serial.print("Before clean");
-    // Serial.println(trackSensorAddresses[3][1]);
-    // Serial.println("entered loop");
-    for (unsigned short i = 0; i < 14; i++)
+    for (unsigned short i = 0; i < TOTAL_SENSORS; i++)
     {
         trackSensorAddresses[i][1] = 0;
     }
-    // Serial.print("After clean");
-    // Serial.println(trackSensorAddresses[3][1]);
 }
-// Had to set it to a static variable 14 or it wouldn't work.
+
 void readSensorCounters(unsigned int (trackSensorAddresses[TOTAL_SENSORS][MAX_READINGS]))
 {
-    for (short i = 0; i < 14; i++)
+    for (short i = 0; i < TOTAL_SENSORS; i++)
     {
         Serial.print(trackSensorAddresses[i][0]);
         Serial.print(" - ");
