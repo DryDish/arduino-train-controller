@@ -2,8 +2,11 @@
 #define TRAIN_CODE_C_SEND_COMMAND
 
 #include "command.h"
+#include "bytesAndbools.h"
+#include "definitions.h"
 #include <Arduino.h>
 
-void sendCommand(struct Command *command);
+
+void sendState(struct Command *command);
 
 #endif // TRAIN_CODE_C_SEND_COMMAND

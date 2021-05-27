@@ -6,11 +6,11 @@ void changeCommandTrain(struct Command *command, unsigned char newByteOne, unsig
     // delay needed to ensure the ISR sequence is triggered in time
     // Anything lower than 6 will occasionally miss the changed bytes
     // If issues arise increase it to 7 or 8
-    delay(6);
+
     noInterrupts();
     command -> byteOne = newByteOne;
     command -> byteTwo = newByteTwo;
-    command -> checksum = newByteOne ^ newByteTwo;
+    command -> checksum = (newByteOne ^ newByteTwo);
     interrupts();
 }
 

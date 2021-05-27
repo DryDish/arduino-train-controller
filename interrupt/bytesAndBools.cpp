@@ -8,3 +8,4 @@ unsigned char byteOne = 0;
 unsigned char byteTwo = 0;
 bool bitIsOne = false;
 bool hasBit = false;
+unsigned char lastTimer = 0;

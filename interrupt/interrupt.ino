@@ -4,7 +4,7 @@
 #include "changeCommand.h"
 #include "readCommand.h"
 #include "setupTimer2Overflow.h"
-#include "sendCommand.h"
+#include "sendState.h"
 #include "linkedList.h"
 #include "stateMachine.h"
 #include "readAccessoryData.h"
@@ -152,39 +152,19 @@ void addCommandToListInSetup(struct Command *command, unsigned short address, un
 bool secondInterrupt = false;
 ISR(TIMER2_OVF_vect)
 {
-    unsigned char lastTimer;
     if (secondInterrupt) 
     {  // for every second interupt just toggle signal
         digitalWrite(DCC_PIN,1);
         secondInterrupt = false;    
         TCNT2 += lastTimer;
-        //Serial.print("1");
     }
     else  
     {  // != every second interrupt, advance bit or state
         digitalWrite(DCC_PIN,0);
         secondInterrupt = true;
-        //Serial.print("0");
+        sendState(&command);
     }
     
-    while (hasBit)
-    {
-        if (bitIsOne)  
-        {  // data = 1 short pulse
-            TCNT2+=TIMER_SHORT;
-            lastTimer=TIMER_SHORT;
-            //Serial.print('1');
-            bitIsOne = false;
-            hasBit = false;
-        }
-        else  
-        {   // data = 0 long pulse
-            TCNT2 += TIMER_LONG; 
-            lastTimer = TIMER_LONG;
-            //Serial.print('0');
-            hasBit = false;
-        }
-    }
 }
 
 // ------------------------------------------------------ SETUP ------------------------------------------------------
@@ -198,23 +178,29 @@ void setup()
     pinMode(DCC_PIN, OUTPUT);                   // pin 4 this is for the DCC Signal
     pinMode(LED_BUILTIN, OUTPUT);
     addSensorPins();
+    
     prepareTrackCommands();
 
     // Start all of the trains
-    for (short i = 0; i < (sizeof(trainNumbers) / sizeof(trainNumbers[0])); i++)
+    for (short i = 0; i < 3; i++)
     {
-        changeCommandTrain(&command, trainNumbers[i], SPEED8);
+        changeCommandTrain(&command, trainNumbers[i%3], SPEED8);
         addToList(command.byteOne, command.byteTwo);
     }
-
+    delay(100);
     Serial.println("Setup complete!\n");
 }
 
 // ------------------------------------------------------  LOOP ------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------
-
+unsigned char loopCounter = 0;
 void loop()
 {
+    if (loopCounter > 150)
+    {   
+        changeCommandTrain(&command, 150, 250);
+        addToList(command.byteOne, command.byteTwo);
+    }
     readAccessoryData(trackSensorAddresses);
 
     advanceStateMachine(trackSensorAddresses, &command);
@@ -223,11 +209,9 @@ void loop()
 
     readCommand(&command, "the loop sent:");
 
-    sendCommand(&command);
-    
-    //Serial.println("\n-----------");
-    
-    delay(0);
+    //the sendState(&command) is in ISR loop;
+    loopCounter++;
+    delay(100);
 }
 
 // ------------------------------------------------------ END LOOP ------------------------------------------------------

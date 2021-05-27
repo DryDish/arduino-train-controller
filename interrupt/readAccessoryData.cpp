@@ -4,6 +4,7 @@ void readAccessoryData(unsigned int trackSensorAddresses[TOTAL_SENSORS][MAX_READ
 {
     for (short i = 0; i < TOTAL_SENSORS; i++)
    {
+      /*
       unsigned char reading = digitalRead(trackSensorAddresses[i][0]);
       if (reading != 1)
       {
@@ -29,6 +30,6 @@ void readAccessoryData(unsigned int trackSensorAddresses[TOTAL_SENSORS][MAX_READ
          Serial.print(trackSensorAddresses[i][0]);
          Serial.println(" >");
          trackSensorAddresses[i][1]++;
-      }
+      }*/
    }
 }
