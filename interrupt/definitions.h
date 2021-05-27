@@ -1,19 +1,25 @@
 #ifndef TRAIN_CODE_C_DEFINITIONS
 #define TRAIN_CODE_C_DEFINITIONS
 
-// For the interrupts
+// Interrupt variables
 #define TIMER_SHORT 0x8D               // 58usec pulse length 141 255-141=114
 #define TIMER_LONG  0x1B               // 116usec pulse length 27 255-27 =228
+
+// Array variables
+#define MAX_READINGS 2
+#define TOTAL_SENSORS 14
 
 // Static variables
 #define DCC_PIN 4
 
+// LinkedList Node definition
 struct Node {
     unsigned short byteOne;
     unsigned short byteTwo;
     struct Node *next;
 };
 
+// Command variables
 #define BLANK_PREAMBLE 0xFF
 #define BLANK_BYTE_ONE 1
 #define BLANK_BYTE_TWO 1
@@ -21,7 +27,7 @@ struct Node {
 #define SEPARATOR 0
 #define END_OF_MESSAGE 1
 
-// Speed
+// Train speed variables
 #define SPEED0 0x60
 #define HARDSTOP 0x61
 #define SPEED1 0x62
