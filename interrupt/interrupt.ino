@@ -7,6 +7,10 @@
 #include "sendCommand.h"
 #include "linkedList.h"
 #include "stateMachine.h"
+#include "readAccessoryData.h"
+
+
+// ------------------------------------------------------ STRUCTS ------------------------------------------------------
 
 struct Command blankCommand =
     {
@@ -34,6 +38,8 @@ struct Command command =
         END_OF_MESSAGE                                  // --- End of message bit ---
 };
 
+// ------------------------------------------------------ ARRAYS ------------------------------------------------------
+
 // Pins for getting track sensor inputs
 unsigned int trackSensorAddresses[TOTAL_SENSORS][MAX_READINGS] = {{13, 0}, {12, 0}, {11, 0}, {10, 0}, {9, 0}, {8, 0}, {7, 0}, {6, 0}, {5, 0}, {A0, 0}, {A1, 0}, {A2, 0}, {A3, 0}, {A4, 0}};
 
@@ -46,116 +52,15 @@ unsigned short switchAddresses[16] = {221, 222, 234, 233, 224, 223, 231, 232, 24
 // Static engine number of the trains
 unsigned char trainNumbers[3] = {11, 8, 40}; 
 
+// -------------------------------------------------- METHODS DECLARATIONS ---------------------------------------------------
+
 void addSensorPins();
 void prepareTrackCommands();
 unsigned char regenerateCommand();
 void addCommandToListInSetup(struct Command *command, unsigned short address, unsigned char power, unsigned char direction);
 
-bool secondInterrupt = false;
-ISR(TIMER2_OVF_vect)
-{
-    unsigned char lastTimer;
-    if (secondInterrupt) 
-    {  // for every second interupt just toggle signal
-        digitalWrite(DCC_PIN,1);
-        secondInterrupt = false;    
-        TCNT2 += lastTimer;
-        //Serial.print("1");
-    }
-    else  
-    {  // != every second interrupt, advance bit or state
-        digitalWrite(DCC_PIN,0);
-        secondInterrupt = true;
-        //Serial.print("0");
-    }
-    
-    while (hasBit)
-    {
-        if (bitIsOne)  
-        {  // data = 1 short pulse
-            TCNT2+=TIMER_SHORT;
-            lastTimer=TIMER_SHORT;
-            //Serial.print('1');
-            bitIsOne = false;
-            hasBit = false;
-        }
-        else  
-        {   // data = 0 long pulse
-            TCNT2 += TIMER_LONG; 
-            lastTimer = TIMER_LONG;
-            //Serial.print('0');
-            hasBit = false;
-        }
-
-    }
-
-}
-
-// ----------------- SETUP ------------------------
-
-
-unsigned char timerKinda = 0;
-void setup()
-{
-    Serial.begin(9600);
-    Serial.print("Setting up...");
-    setupTimer2Overflow();
-    pinMode(DCC_PIN, OUTPUT);                   // pin 4 this is for the DCC Signal
-    pinMode(LED_BUILTIN, OUTPUT);
-    addSensorPins();
-    prepareTrackCommands();
-
-    // Start all of the trains
-    for (short i = 0; i < (sizeof(trainNumbers) / sizeof(trainNumbers[0])); i++)
-    {
-        changeCommandTrain(&command, trainNumbers[i], SPEED8);
-        addToList(command.byteOne, command.byteTwo);
-    }
-
-    Serial.println("Setup complete!\n");
-}
-
-// ----------------- START LOOP ------------------------
-
-void loop()
-{
-    advanceStateMachine(trackSensorAddresses, &command);
-
-    regenerateCommand();
-    readCommand(&command, "the loop sent:");
-    sendCommand(&command);
-
-    //Serial.println("\n-----------");
-    
-    delay(0);
-}
-
-// ------------------- END LOOP -------------------------
-
-
-
-// ----------------- LOOP METHODS ------------------------
-
-unsigned char regenerateCommand()
-{
-    if (isEmpty())
-    {
-        command = blankCommand;
-        return 1;
-    }
-    Node *item = retreiveFirstItemInList();
-    changeCommandTrain(&command, item->byteOne, item->byteTwo);
-    deleteFirstListItem();
-    return 0;
-}
-
-void addCommandToListInSetup(struct Command *command, unsigned short address, unsigned char power, unsigned char direction)
-{
-    changeCommandAccessory(command, address, power, direction);
-    addToList(command->byteOne, command->byteTwo);
-}
-
-// ----------------- SETUP METHODS ------------------------
+// ------------------------------------------------------ SETUP METHODS ------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------------
 
 void addSensorPins()
 {
@@ -218,50 +123,112 @@ void prepareTrackCommands()
         addCommandToListInSetup(&command, 231, 0, 0);
         addCommandToListInSetup(&command, 232, 0, 1);
 }
-/*
-// If you need to test the State Machine put this into main along with 
-// These two variables on the top of the file
-// -- TOP --
-// unsigned char counter = 0;
-// bool secondTime = false;
-// -- MAIN --
-if (counter == 75)
-{
-    if (!secondTime)
-    {
-        Serial.println("---------------");
-        Serial.println("entered counter - 1");
-        Serial.println("---------------");
-        trackSensorAddresses[3][1] = 3;
-    }
 
+// ------------------------------------------------------ LOOP METHODS ---------------------------------------------
+// -----------------------------------------------------------------------------------------------------------------
+
+unsigned char regenerateCommand()
+{
+    if (isEmpty())
+    {
+        command = blankCommand;
+        return 1;
+    }
+    Node *item = retreiveFirstItemInList();
+    changeCommandTrain(&command, item->byteOne, item->byteTwo);
+    deleteFirstListItem();
+    return 0;
 }
 
-if (counter == 150)
+void addCommandToListInSetup(struct Command *command, unsigned short address, unsigned char power, unsigned char direction)
 {
-    if (!secondTime)
-    {
-        Serial.println("---------------");
-        Serial.println("entered counter - 2");
-        Serial.println("---------------");
-        trackSensorAddresses[11][1] = 3;
-        trackSensorAddresses[7][1] = 3;
-    }
-
+    changeCommandAccessory(command, address, power, direction);
+    addToList(command->byteOne, command->byteTwo);
 }
 
-if (counter == 225)
+// ------------------------------------------------------ ISR ------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------------
+
+bool secondInterrupt = false;
+ISR(TIMER2_OVF_vect)
 {
-    if (!secondTime)
+    unsigned char lastTimer;
+    if (secondInterrupt) 
+    {  // for every second interupt just toggle signal
+        digitalWrite(DCC_PIN,1);
+        secondInterrupt = false;    
+        TCNT2 += lastTimer;
+        //Serial.print("1");
+    }
+    else  
+    {  // != every second interrupt, advance bit or state
+        digitalWrite(DCC_PIN,0);
+        secondInterrupt = true;
+        //Serial.print("0");
+    }
+    
+    while (hasBit)
     {
-        Serial.println("---------------");
-        Serial.println("entered counter - 3");
-        Serial.println("---------------");
-        trackSensorAddresses[2][1] = 3;
-        counter = 0;
-        secondTime = true;
+        if (bitIsOne)  
+        {  // data = 1 short pulse
+            TCNT2+=TIMER_SHORT;
+            lastTimer=TIMER_SHORT;
+            //Serial.print('1');
+            bitIsOne = false;
+            hasBit = false;
+        }
+        else  
+        {   // data = 0 long pulse
+            TCNT2 += TIMER_LONG; 
+            lastTimer = TIMER_LONG;
+            //Serial.print('0');
+            hasBit = false;
+        }
     }
 }
-counter++;
 
-*/
+// ------------------------------------------------------ SETUP ------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------
+
+void setup()
+{
+    Serial.begin(9600);
+    Serial.print("Setting up...");
+    setupTimer2Overflow();
+    pinMode(DCC_PIN, OUTPUT);                   // pin 4 this is for the DCC Signal
+    pinMode(LED_BUILTIN, OUTPUT);
+    addSensorPins();
+    prepareTrackCommands();
+
+    // Start all of the trains
+    for (short i = 0; i < (sizeof(trainNumbers) / sizeof(trainNumbers[0])); i++)
+    {
+        changeCommandTrain(&command, trainNumbers[i], SPEED8);
+        addToList(command.byteOne, command.byteTwo);
+    }
+
+    Serial.println("Setup complete!\n");
+}
+
+// ------------------------------------------------------  LOOP ------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------
+
+void loop()
+{
+    readAccessoryData(trackSensorAddresses);
+
+    advanceStateMachine(trackSensorAddresses, &command);
+
+    regenerateCommand();
+
+    readCommand(&command, "the loop sent:");
+
+    sendCommand(&command);
+    
+    //Serial.println("\n-----------");
+    
+    delay(0);
+}
+
+// ------------------------------------------------------ END LOOP ------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,48 @@
+
+// If you need to test the State Machine put this into main along with 
+// These two variables on the top of the file
+// -- TOP --
+
+ unsigned char counter = 0;
+bool secondTime = false;
+
+// -- MAIN --
+
+if (counter == 75)
+{
+    if (!secondTime)
+    {
+        Serial.println("---------------");
+        Serial.println("entered counter - 1");
+        Serial.println("---------------");
+        trackSensorAddresses[3][1] = 3;
+    }
+
+}
+
+if (counter == 150)
+{
+    if (!secondTime)
+    {
+        Serial.println("---------------");
+        Serial.println("entered counter - 2");
+        Serial.println("---------------");
+        trackSensorAddresses[11][1] = 3;
+        trackSensorAddresses[7][1] = 3;
+    }
+
+}
+
+if (counter == 225)
+{
+    if (!secondTime)
+    {
+        Serial.println("---------------");
+        Serial.println("entered counter - 3");
+        Serial.println("---------------");
+        trackSensorAddresses[2][1] = 3;
+        counter = 0;
+        secondTime = true;
+    }
+}
+counter++;
