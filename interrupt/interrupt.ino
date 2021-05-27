@@ -200,6 +200,7 @@ void loop()
     {   
         changeCommandTrain(&command, 150, 250);
         addToList(command.byteOne, command.byteTwo);
+        loopCounter = 0;
     }
     readAccessoryData(trackSensorAddresses);
 
