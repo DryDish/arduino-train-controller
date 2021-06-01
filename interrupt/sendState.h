@@ -7,6 +7,6 @@
 #include <Arduino.h>
 
 
-void sendState(struct Command *command);
+void sendState(struct Command *command, bool printoutState);
 
 #endif // TRAIN_CODE_C_SEND_COMMAND

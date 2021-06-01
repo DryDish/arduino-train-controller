@@ -1,6 +1,6 @@
 #include "sendState.h"
 
-
+bool printout = false;
 // Figure out how to send only 1 per interrupt.
 void convertToBinaryAndSend(unsigned char byte, unsigned char size)
 {
@@ -16,19 +16,27 @@ void convertToBinaryAndSend(unsigned char byte, unsigned char size)
         {
             TCNT2 += TIMER_SHORT;
             lastTimer=TIMER_SHORT;
+            if (printout)
+            {
+                Serial.print(1);
+            }
         }
         else                // if the value after right shifting is 0 on position 1 then long pulse
         {
             TCNT2 += TIMER_LONG; 
             lastTimer = TIMER_LONG;
-    } 
+            if (printout)
+            {
+                Serial.print(0);
+            }
+        } 
     }
 }
 unsigned char bitState = 1;
 unsigned char size = 8;
-void sendState(struct Command *command)
+void sendState(struct Command *command, bool printoutState)
 {
-    
+    printout = printoutState;
     switch (bitState)
     {
     case 1: // preamble 1
@@ -38,6 +46,10 @@ void sendState(struct Command *command)
         {
             bitState = 2;
             size = 8;
+            if (printout)
+            {
+                Serial.println();
+            }
         }
         break;
     case 2: // preamble 2
@@ -47,6 +59,10 @@ void sendState(struct Command *command)
         {
             bitState = 3;
             size = 1;
+            if (printout)
+            {
+                Serial.println();
+            }
         }
         break;
     case 3: // blank 1
@@ -56,6 +72,10 @@ void sendState(struct Command *command)
         {
             bitState = 4;
             size = 8;
+            if (printout)
+            {
+                Serial.println();
+            }
         }
         break;
     case 4: // byte 1
@@ -65,6 +85,10 @@ void sendState(struct Command *command)
         {
             bitState = 5;
             size = 1;
+            if (printout)
+            {
+                Serial.println();
+            }
         }
         break;
     case 5: // blank 2
@@ -74,6 +98,10 @@ void sendState(struct Command *command)
         {
             bitState = 6;
             size = 8;
+            if (printout)
+            {
+                Serial.println();
+            }
         }
         break;
     case 6: // byte 2
@@ -83,6 +111,10 @@ void sendState(struct Command *command)
         {
             bitState = 7;
             size = 1;
+            if (printout)
+            {
+                Serial.println();
+            }            
         }
         break;
     case 7: // blank 3
@@ -92,6 +124,10 @@ void sendState(struct Command *command)
         {
             bitState = 8;
             size = 8;
+            if (printout)
+            {
+                Serial.println();
+            }
         }
         break;
     case 8: // checksum
@@ -101,6 +137,10 @@ void sendState(struct Command *command)
         {
             bitState = 9;
             size = 1;
+            if (printout)
+            {
+                Serial.println();
+            }
         }
         break;
     case 9: // end bit
@@ -110,6 +150,11 @@ void sendState(struct Command *command)
         {
             bitState = 1;
             size = 8;
+            if (printout)
+            {
+                Serial.println();
+                Serial.println();
+            }
         }
         break;
 

@@ -165,7 +165,7 @@ ISR(TIMER2_OVF_vect)
     {  // != every second interrupt, advance bit or state
         digitalWrite(DCC_PIN,0);
         secondInterrupt = true;
-        sendState(&command);
+        sendState(&command, true);
     }
     
 }

@@ -8,6 +8,7 @@ void readCommand(struct Command *commandPointer, const char *prefix)
 {
     if (commandPointer->byteOne != 0)
     {
+        Serial.println();
         Serial.print(prefix);
         Serial.print(" < byteOne: ");
         Serial.print(commandPointer -> byteOne);
