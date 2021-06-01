@@ -52,6 +52,17 @@ unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSOR
     }
     else if (state == ORANGE_MOVING)
     {
+
+        if (trackSensorAddresses[11][1] >= 2)
+        {
+            addCommandToList(command, 141, 1, 0);
+        }
+
+        if (trackSensorAddresses[7][1] >= 2)
+        {
+            addCommandToList(command, 101, 1, 0);
+        }
+
         if (trackSensorAddresses[11][1] < 2 || trackSensorAddresses[7][1] < 2)
         {
             return 0;
@@ -65,18 +76,21 @@ unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSOR
         Serial.print("Sensor 7  -- index: ");
         Serial.println(trackSensorAddresses[7][0]);
 
-        //readSensorCounters(trackSensorAddresses);
-        // SOMETHING WEIRD HERE BOYS
+        addCommandToList(command, 242, 1, 0);
+        addCommandToList(command, 242, 0, 0);
+
         addCommandToList(command, 241, 1, 1);
         addCommandToList(command, 241, 0, 1);
-        // SOMETHING WEIRD HERE BOYS
+
         addCommandToList(command, 249, 1, 0);
         addCommandToList(command, 249, 0, 0);
 
+        //readSensorCounters(trackSensorAddresses);
+
+        // Just in case, send lights command again
+        addCommandToList(command, 141 , 1, 0);
         addCommandToList(command, 101, 1, 0);
-
-        addCommandToList(command,141 , 1, 0);
-
+        // Switch orange train light to green
         addCommandToList(command, 42, 1, 1);
 
         state = ORANGE_RETURNED;
@@ -92,11 +106,12 @@ unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSOR
         Serial.println("state: RETURNED");
         Serial.println("---------------");
 
+        addCommandToList(command, 242, 1, 0);
+        addCommandToList(command, 242, 0, 0);
 
-        // SOMETHING WEIRD HERE BOYS
         addCommandToList(command, 241, 1, 0);
         addCommandToList(command, 241, 0, 0);
-        // SOMETHING WEIRD HERE BOYS
+
         addCommandToList(command, 249, 1, 1);
         addCommandToList(command, 249, 0, 1);
 
@@ -104,8 +119,6 @@ unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSOR
         addCommandToList(command, 101, 1, 1);
         addCommandToList(command, 141, 1, 1);
 
-        // Documentation states that we should clear sensors, but we dont?
-        // I'll comment here a clear sensor method
         clearSensorCounters(trackSensorAddresses);
 
         state = ORANGE_WAITING;

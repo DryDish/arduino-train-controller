@@ -101,6 +101,9 @@ void prepareTrackCommands()
     {
         changeCommandAccessory(&command, switchAddresses[i], 1, 1);
         addToList(command.byteOne, command.byteTwo);
+
+        changeCommandAccessory(&command, switchAddresses[i], 0, 1);
+        addToList(command.byteOne, command.byteTwo);
     }
 
         addCommandToListInSetup(&command, 42, 1, 0);
@@ -212,7 +215,7 @@ void loop()
 
     //the sendState(&command) is in ISR loop;
     loopCounter++;
-    delay(100);
+    delay(1200);
 }
 
 // ------------------------------------------------------ END LOOP ------------------------------------------------------
