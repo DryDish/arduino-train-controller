@@ -40,7 +40,8 @@ struct Command command =
 unsigned char *ptr_byteOne = &command.byteOne;
 unsigned char *ptr_byteTwo = &command.byteTwo;
 unsigned char *ptr_checksum = &command.checksum;
-
+unsigned int stateCount = 0;
+unsigned int *ptr_stateCount = &stateCount;
 // ------------------------------------------------------ ARRAYS ------------------------------------------------------
 
 // Pins for getting track sensor inputs
@@ -172,7 +173,7 @@ ISR(TIMER2_OVF_vect)
 
         digitalWrite(DCC_PIN, 0);
         secondInterrupt = true;
-        sendState(ptr_byteOne, ptr_byteTwo, ptr_checksum, printouts);
+        sendState(ptr_byteOne, ptr_byteTwo, ptr_checksum, &stateCount);
     }
 }
 
@@ -220,12 +221,9 @@ void loop()
     //readCommand(&command, "the loop sent:");
 
     //the sendState(&command) is in ISR loop;
-    if (!printouts)
-    {
-        Serial.println("-");
-    }
-    loopCounter++;
-    delay(1200);
+    delay(50);
+    Serial.println(stateCount);
+    stateCount = 0;
 }
 
 // ------------------------------------------------------ END LOOP ------------------------------------------------------
