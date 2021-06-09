@@ -9,34 +9,37 @@
 #include "stateMachine.h"
 #include "readAccessoryData.h"
 
-
 // ------------------------------------------------------ STRUCTS ------------------------------------------------------
 
 struct Command blankCommand =
     {
-        PREAMBLE,                                       // preamble part 1
-        PREAMBLE,                                       // preamble part 2
-        SEPARATOR,                                      // -- Separating bit --
-        BLANK_BYTE_ONE,                                 // Engine Number
-        SEPARATOR,                                      // -- Separating bit --
-        BLANK_BYTE_TWO,                                 // byteTwo
-        SEPARATOR,                                      // -- Separating bit --
-        blankCommand.byteOne ^ blankCommand.byteTwo,    // Checksum
-        END_OF_MESSAGE                                  // --- End of message bit ---
+        PREAMBLE,                                    // preamble part 1
+        PREAMBLE,                                    // preamble part 2
+        SEPARATOR,                                   // -- Separating bit --
+        BLANK_BYTE_ONE,                              // Engine Number
+        SEPARATOR,                                   // -- Separating bit --
+        BLANK_BYTE_TWO,                              // byteTwo
+        SEPARATOR,                                   // -- Separating bit --
+        blankCommand.byteOne ^ blankCommand.byteTwo, // Checksum
+        END_OF_MESSAGE                               // --- End of message bit ---
 };
 
 struct Command command =
-{
-        PREAMBLE,                                       // preamble part 1
-        PREAMBLE,                                       // preamble part 2
-        SEPARATOR,                                      // -- Separating bit --
-        BLANK_BYTE_ONE,                                 // Engine Number
-        SEPARATOR,                                      // -- Separating bit --
-        BLANK_BYTE_TWO,                                 // byteTwo
-        SEPARATOR,                                      // -- Separating bit --
-        command.byteOne ^ command.byteTwo,              // Checksum
-        END_OF_MESSAGE                                  // --- End of message bit ---
+    {
+        PREAMBLE,                          // preamble part 1
+        PREAMBLE,                          // preamble part 2
+        SEPARATOR,                         // -- Separating bit --
+        BLANK_BYTE_ONE,                    // Engine Number
+        SEPARATOR,                         // -- Separating bit --
+        BLANK_BYTE_TWO,                    // byteTwo
+        SEPARATOR,                         // -- Separating bit --
+        command.byteOne ^ command.byteTwo, // Checksum
+        END_OF_MESSAGE                     // --- End of message bit ---
 };
+
+unsigned char *ptr_byteOne = &command.byteOne;
+unsigned char *ptr_byteTwo = &command.byteTwo;
+unsigned char *ptr_checksum = &command.checksum;
 
 // ------------------------------------------------------ ARRAYS ------------------------------------------------------
 
@@ -50,7 +53,7 @@ unsigned short lightAddresses[28] = {12, 52, 21, 51, 62, 22, 61, 11, 14, 42, 82,
 unsigned short switchAddresses[16] = {221, 222, 234, 233, 224, 223, 231, 232, 242, 250, 249, 241, 243, 251, 244, 252};
 
 // Static engine number of the trains
-unsigned char trainNumbers[3] = {11, 8, 40}; 
+unsigned char trainNumbers[3] = {11, 8, 40};
 
 // -------------------------------------------------- METHODS DECLARATIONS ---------------------------------------------------
 
@@ -106,25 +109,25 @@ void prepareTrackCommands()
         addToList(command.byteOne, command.byteTwo);
     }
 
-        addCommandToListInSetup(&command, 42, 1, 0);
-    
-        addCommandToListInSetup(&command, 101, 1, 1);
-        addCommandToListInSetup(&command, 141, 1, 1);
+    addCommandToListInSetup(&command, 42, 1, 0);
 
-        addCommandToListInSetup(&command, 223, 1, 0);
-        addCommandToListInSetup(&command, 224, 1, 1);
-        addCommandToListInSetup(&command, 223, 0, 0);
-        addCommandToListInSetup(&command, 224, 0, 1);
+    addCommandToListInSetup(&command, 101, 1, 1);
+    addCommandToListInSetup(&command, 141, 1, 1);
 
-        addCommandToListInSetup(&command, 233, 1, 1);
-        addCommandToListInSetup(&command, 234, 1, 1);
-        addCommandToListInSetup(&command, 233, 0, 1);
-        addCommandToListInSetup(&command, 234, 0, 1);
-        
-        addCommandToListInSetup(&command, 231, 1, 0);
-        addCommandToListInSetup(&command, 232, 1, 1);
-        addCommandToListInSetup(&command, 231, 0, 0);
-        addCommandToListInSetup(&command, 232, 0, 1);
+    addCommandToListInSetup(&command, 223, 1, 0);
+    addCommandToListInSetup(&command, 224, 1, 1);
+    addCommandToListInSetup(&command, 223, 0, 0);
+    addCommandToListInSetup(&command, 224, 0, 1);
+
+    addCommandToListInSetup(&command, 233, 1, 1);
+    addCommandToListInSetup(&command, 234, 1, 1);
+    addCommandToListInSetup(&command, 233, 0, 1);
+    addCommandToListInSetup(&command, 234, 0, 1);
+
+    addCommandToListInSetup(&command, 231, 1, 0);
+    addCommandToListInSetup(&command, 232, 1, 1);
+    addCommandToListInSetup(&command, 231, 0, 0);
+    addCommandToListInSetup(&command, 232, 0, 1);
 }
 
 // ------------------------------------------------------ LOOP METHODS ---------------------------------------------
@@ -151,23 +154,26 @@ void addCommandToListInSetup(struct Command *command, unsigned short address, un
 
 // ------------------------------------------------------ ISR ------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------------
-
+bool printouts = false;
+bool flag;
+bool *ptr_flag = &flag;
 bool secondInterrupt = false;
 ISR(TIMER2_OVF_vect)
 {
-    if (secondInterrupt) 
-    {  // for every second interupt just toggle signal
-        digitalWrite(DCC_PIN,1);
-        secondInterrupt = false;    
+
+    if (secondInterrupt)
+    { // for every second interupt just toggle signal
+        digitalWrite(DCC_PIN, 1);
+        secondInterrupt = false;
         TCNT2 += lastTimer;
     }
-    else  
-    {  // != every second interrupt, advance bit or state
-        digitalWrite(DCC_PIN,0);
+    else
+    { // != every second interrupt, advance bit or state
+
+        digitalWrite(DCC_PIN, 0);
         secondInterrupt = true;
-        sendState(&command, true);
+        sendState(ptr_byteOne, ptr_byteTwo, ptr_checksum, printouts);
     }
-    
 }
 
 // ------------------------------------------------------ SETUP ------------------------------------------------------
@@ -178,16 +184,16 @@ void setup()
     Serial.begin(9600);
     Serial.print("Setting up...");
     setupTimer2Overflow();
-    pinMode(DCC_PIN, OUTPUT);                   // pin 4 this is for the DCC Signal
+    pinMode(DCC_PIN, OUTPUT); // pin 4 this is for the DCC Signal
     pinMode(LED_BUILTIN, OUTPUT);
     addSensorPins();
-    
+
     prepareTrackCommands();
 
     // Start all of the trains
     for (short i = 0; i < 3; i++)
     {
-        changeCommandTrain(&command, trainNumbers[i%3], SPEED8);
+        changeCommandTrain(&command, trainNumbers[i % 3], SPEED8);
         addToList(command.byteOne, command.byteTwo);
     }
     delay(100);
@@ -198,9 +204,9 @@ void setup()
 // -------------------------------------------------------------------------------------------------------------------
 unsigned char loopCounter = 0;
 void loop()
-{
+{    
     if (loopCounter > 150)
-    {   
+    {
         changeCommandTrain(&command, 150, 250);
         addToList(command.byteOne, command.byteTwo);
         loopCounter = 0;
@@ -211,9 +217,13 @@ void loop()
 
     regenerateCommand();
 
-    readCommand(&command, "the loop sent:");
+    //readCommand(&command, "the loop sent:");
 
     //the sendState(&command) is in ISR loop;
+    if (!printouts)
+    {
+        Serial.println("-");
+    }
     loopCounter++;
     delay(1200);
 }

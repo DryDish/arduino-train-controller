@@ -2,47 +2,63 @@
 
 bool printout = false;
 // Figure out how to send only 1 per interrupt.
-void convertToBinaryAndSend(unsigned char byte, unsigned char size)
+void convertToBinaryAndSend(unsigned char *byte, unsigned char *size)
 {
-    if (size> 0)
+    //n = byte;                       //right shift by size ( -1 to correct the bit placement)
+    if ((*byte >> *size - 1) & 1) // if the value after right shifting is 1 in position 1 then short pulse
     {
-        unsigned char n;
-        unsigned char c;
-        unsigned char k;
-        n = byte;
-        
-        k = n >> size-1;       //right shift by size ( -1 to correct the bit placement)
-        if (k & 1)          // if the value after right shifting is 1 in position 1 then short pulse
+        TCNT2 += TIMER_SHORT;
+        lastTimer = TIMER_SHORT;
+        if (printout)
         {
-            TCNT2 += TIMER_SHORT;
-            lastTimer=TIMER_SHORT;
-            if (printout)
-            {
-                Serial.print(1);
-            }
+            Serial.print(1);
         }
-        else                // if the value after right shifting is 0 on position 1 then long pulse
+    }
+    else // if the value after right shifting is 0 on position 1 then long pulse
+    {
+        TCNT2 += TIMER_LONG;
+        lastTimer = TIMER_LONG;
+        if (printout)
         {
-            TCNT2 += TIMER_LONG; 
-            lastTimer = TIMER_LONG;
-            if (printout)
-            {
-                Serial.print(0);
-            }
-        } 
+            Serial.print(0);
+        }
     }
 }
+
+void sendOne()
+{
+    TCNT2 += TIMER_SHORT;
+    lastTimer = TIMER_SHORT;
+    if (printout)
+    {
+        Serial.print(1);
+    }
+}
+
+void sendZero()
+{
+    TCNT2 = TIMER_LONG;
+    lastTimer = TIMER_LONG;
+    if (printout)
+    {
+        Serial.print(0);
+    }
+}
+
 unsigned char bitState = 1;
 unsigned char size = 8;
-void sendState(struct Command *command, bool printoutState)
+unsigned char *ptr_size = &size;
+
+
+void sendState(unsigned char *ptr_byteOne, unsigned char *ptr_byteTwo, unsigned char *ptr_checksum, bool printoutState)
 {
     printout = printoutState;
     switch (bitState)
     {
     case 1: // preamble 1
-        convertToBinaryAndSend(command->preamble1, size);
+        sendOne();
         size--;
-        if (size == 0 )
+        if (size == 0)
         {
             bitState = 2;
             size = 8;
@@ -53,9 +69,9 @@ void sendState(struct Command *command, bool printoutState)
         }
         break;
     case 2: // preamble 2
-        convertToBinaryAndSend(command->preamble2, size);
+        sendOne();
         size--;
-        if (size == 0 )
+        if (size == 0)
         {
             bitState = 3;
             size = 1;
@@ -66,9 +82,9 @@ void sendState(struct Command *command, bool printoutState)
         }
         break;
     case 3: // blank 1
-        convertToBinaryAndSend(command->blank1, size);
+        sendZero();
         size--;
-        if (size == 0 )
+        if (size == 0)
         {
             bitState = 4;
             size = 8;
@@ -79,9 +95,9 @@ void sendState(struct Command *command, bool printoutState)
         }
         break;
     case 4: // byte 1
-        convertToBinaryAndSend(command->byteOne, size);
-        size--;       
-        if (size == 0 )
+        convertToBinaryAndSend(ptr_byteOne, ptr_size);
+        size--;
+        if (size == 0)
         {
             bitState = 5;
             size = 1;
@@ -92,9 +108,9 @@ void sendState(struct Command *command, bool printoutState)
         }
         break;
     case 5: // blank 2
-        convertToBinaryAndSend(command->blank2, size);
+        sendZero();
         size--;
-        if (size == 0 )
+        if (size == 0)
         {
             bitState = 6;
             size = 8;
@@ -105,22 +121,22 @@ void sendState(struct Command *command, bool printoutState)
         }
         break;
     case 6: // byte 2
-        convertToBinaryAndSend(command->byteTwo, size);
+        convertToBinaryAndSend(ptr_byteTwo, ptr_size);
         size--;
-        if (size == 0 )
+        if (size == 0)
         {
             bitState = 7;
             size = 1;
             if (printout)
             {
                 Serial.println();
-            }            
+            }
         }
         break;
     case 7: // blank 3
-        convertToBinaryAndSend(command->blank3, size);
+        sendZero();
         size--;
-        if (size == 0 )
+        if (size == 0)
         {
             bitState = 8;
             size = 8;
@@ -131,9 +147,9 @@ void sendState(struct Command *command, bool printoutState)
         }
         break;
     case 8: // checksum
-        convertToBinaryAndSend(command->checksum, size);
+        convertToBinaryAndSend(ptr_checksum, ptr_size);
         size--;
-        if (size == 0 )
+        if (size == 0)
         {
             bitState = 9;
             size = 1;
@@ -144,9 +160,9 @@ void sendState(struct Command *command, bool printoutState)
         }
         break;
     case 9: // end bit
-        convertToBinaryAndSend(command->endChar, size);
+        sendOne();
         size--;
-        if (size == 0 )
+        if (size == 0)
         {
             bitState = 1;
             size = 8;
@@ -154,6 +170,10 @@ void sendState(struct Command *command, bool printoutState)
             {
                 Serial.println();
                 Serial.println();
+            }
+            else
+            {
+                Serial.println("1");
             }
         }
         break;
