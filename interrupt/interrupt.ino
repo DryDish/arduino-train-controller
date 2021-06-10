@@ -37,11 +37,6 @@ struct Command command =
         END_OF_MESSAGE                     // --- End of message bit ---
 };
 
-unsigned char *ptr_byteOne = &command.byteOne;
-unsigned char *ptr_byteTwo = &command.byteTwo;
-unsigned char *ptr_checksum = &command.checksum;
-unsigned int stateCount = 0;
-unsigned int *ptr_stateCount = &stateCount;
 // ------------------------------------------------------ ARRAYS ------------------------------------------------------
 
 // Pins for getting track sensor inputs
@@ -155,9 +150,9 @@ void addCommandToListInSetup(struct Command *command, unsigned short address, un
 
 // ------------------------------------------------------ ISR ------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------------
-bool printouts = false;
-bool flag;
-bool *ptr_flag = &flag;
+
+
+bool binaryPrintouts = false;
 bool secondInterrupt = false;
 ISR(TIMER2_OVF_vect)
 {
@@ -173,7 +168,7 @@ ISR(TIMER2_OVF_vect)
 
         digitalWrite(DCC_PIN, 0);
         secondInterrupt = true;
-        sendState(ptr_byteOne, ptr_byteTwo, ptr_checksum, &stateCount);
+        sendState(&command, &binaryPrintouts);
     }
 }
 
@@ -218,12 +213,14 @@ void loop()
 
     regenerateCommand();
 
-    //readCommand(&command, "the loop sent:");
+    
+    // If you want to use both readCommand and binary printouts i reccomend 
+    // setting noInterrupts, otherwise things get weird.    
+    readCommand(&command, "loop set command to :");
 
     //the sendState(&command) is in ISR loop;
-    delay(50);
-    Serial.println(stateCount);
-    stateCount = 0;
+    
+    delay(100);
 }
 
 // ------------------------------------------------------ END LOOP ------------------------------------------------------

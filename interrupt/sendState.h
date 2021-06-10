@@ -7,6 +7,6 @@
 #include <Arduino.h>
 
 
-void sendState(unsigned char *ptr_byteOne, unsigned char *ptr_sizeTwo, unsigned char *ptr_checksum, unsigned int *stateCount);
+void sendState(struct Command *command, bool *printoutState);
 
 #endif // TRAIN_CODE_C_SEND_COMMAND
