@@ -1,7 +1,7 @@
 #include "changeCommand.h"
 
 // this HAS to be a cpp file in order for interrupts() and noInterrupts() to work, but code is written in C first.
-void changeCommandTrain(struct Command *command, unsigned char newByteOne, unsigned char newByteTwo)
+void changeCommand(struct Command *command, unsigned char newByteOne, unsigned char newByteTwo)
 {
     // delay needed to ensure the ISR sequence is triggered in time
     // Anything lower than 6 will occasionally miss the changed bytes
@@ -14,7 +14,6 @@ void changeCommandTrain(struct Command *command, unsigned char newByteOne, unsig
     interrupts();
 }
 
-// Due to the address potentially being larger than 255 i had to make this not use pointers for the values
 void changeCommandAccessory(struct Command *command, unsigned short address, unsigned char power, unsigned char direction)
 {
     unsigned char accByteOne = 128; // 128 = 0b 1000 0000
