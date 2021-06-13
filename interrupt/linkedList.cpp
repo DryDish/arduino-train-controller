@@ -46,6 +46,7 @@ void deleteFirstListItem()
         last = NULL;
     }
     head = head->next;
+    free(tempNode);
 }
 
 struct Node* retreiveFirstItemInList() 
