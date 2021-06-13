@@ -6,7 +6,7 @@
 // --- Does this benefit from being a pointer? should i pass by value? ---
 void readCommand(struct Command *commandPointer, const char *prefix)
 {
-    if (commandPointer->byteOne != 0)
+    if (commandPointer->byteTwo != 1)
     {
         Serial.println();
         Serial.print(prefix);
