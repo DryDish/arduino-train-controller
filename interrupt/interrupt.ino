@@ -56,6 +56,7 @@ void addSensorPins();
 void prepareTrackCommands();
 unsigned char regenerateCommand();
 void addCommandToListInSetup(struct Command *command, unsigned short address, unsigned char power, unsigned char direction);
+void testStateMachine();
 
 // ------------------------------------------------------ SETUP METHODS ------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -147,6 +148,29 @@ void addCommandToListInSetup(struct Command *command, unsigned short address, un
     addToList(command->byteOne, command->byteTwo);
 }
 
+unsigned char loopCounter = 0;
+void testStateMachine()
+{
+    if (loopCounter == 75)
+    {
+        trackSensorAddresses[3][1] = 3;
+    }
+
+    if (loopCounter == 150)
+    {
+        trackSensorAddresses[11][1] = 3;
+        trackSensorAddresses[7][1] = 3;
+
+    }
+
+    if (loopCounter == 225)
+    {
+        trackSensorAddresses[2][1] = 3;
+        loopCounter = 0;
+    }
+    loopCounter++;
+}
+
 // ------------------------------------------------------ ISR ------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------------
 
@@ -197,15 +221,11 @@ void setup()
 
 // ------------------------------------------------------  LOOP ------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------
-unsigned char loopCounter = 0;
 void loop()
-{    
-    if (loopCounter > 150)
-    {
-        changeCommand(&command, 150, 250);
-        addToList(command.byteOne, command.byteTwo);
-        loopCounter = 0;
-    }
+{
+
+    testStateMachine();
+
     readAccessoryData(trackSensorAddresses);
 
     advanceStateMachine(trackSensorAddresses, &command);
@@ -215,11 +235,13 @@ void loop()
     
     // If you want to use both readCommand and binary printouts i reccomend 
     // setting noInterrupts, otherwise things get weird.
+
     //noInterrupts();
     readCommand(&command, "loop set command to :");
     //interrupts();
+
     //the sendState(&command) is in ISR loop;
-    loopCounter++;
+
     delay(100);
 }
 
