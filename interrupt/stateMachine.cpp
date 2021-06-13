@@ -39,7 +39,7 @@ unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSOR
             return 0;
         }
         Serial.println("---------------");
-        Serial.println("state: WAITING");
+        Serial.println("state: ORANGE MOVING");
         Serial.println("---------------");
 
         Serial.print("Sensor 4  -- index: ");
@@ -68,7 +68,7 @@ unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSOR
             return 0;
         }
         Serial.println("---------------");
-        Serial.println("state: MOVING");
+        Serial.println("state: ORANGE RETURNED");
         Serial.println("---------------");
 
         Serial.print("Sensor 11 -- index: ");
@@ -103,7 +103,7 @@ unsigned char advanceStateMachine(unsigned int trackSensorAddresses[TOTAL_SENSOR
             return 0;
         }
         Serial.println("---------------");
-        Serial.println("state: RETURNED");
+        Serial.println("state: WAITING");
         Serial.println("---------------");
 
         addCommandToList(command, 242, 1, 0);

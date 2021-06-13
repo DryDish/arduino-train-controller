@@ -153,11 +153,13 @@ void testStateMachine()
 {
     if (loopCounter == 75)
     {
+        // Condition to move state from waiting to moving
         trackSensorAddresses[3][1] = 3;
     }
 
     if (loopCounter == 150)
     {
+        // Conditions to change from moving to returned
         trackSensorAddresses[11][1] = 3;
         trackSensorAddresses[7][1] = 3;
 
@@ -165,6 +167,7 @@ void testStateMachine()
 
     if (loopCounter == 225)
     {
+        // Condition to return to waiting
         trackSensorAddresses[2][1] = 3;
         loopCounter = 0;
     }
