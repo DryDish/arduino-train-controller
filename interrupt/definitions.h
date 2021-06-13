@@ -14,8 +14,8 @@
 
 // LinkedList Node definition
 struct Node {
-    unsigned short byteOne;
-    unsigned short byteTwo;
+    unsigned char byteOne;
+    unsigned char byteTwo;
     struct Node *next;
 };
 
