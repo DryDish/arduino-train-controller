@@ -1,5 +1,7 @@
 #include "sendState.h"
 
+unsigned char lastTimer = 0;
+
 void sendOne(bool *printoutState)
 {
     TCNT2 += TIMER_SHORT;
@@ -35,9 +37,7 @@ void convertToBinaryAndSend(unsigned char *byte, unsigned char *size, bool *prin
 
 
 unsigned char bitState = 1;
-unsigned char size = 16;
-unsigned char *ptr_size = &size;
-bool printout = false;
+unsigned char size = 8;
 
 /**
  * Pass it a command and it will extract what it needs to send it via ISR
@@ -82,7 +82,7 @@ void sendState(struct Command *command, bool *printoutState)
         }
         break;
     case 4: // byte 1
-        convertToBinaryAndSend(&command->byteOne, ptr_size, printoutState);
+        convertToBinaryAndSend(&command->byteOne, &size, printoutState);
         size--;
         if (size == 0)
         {
@@ -103,7 +103,7 @@ void sendState(struct Command *command, bool *printoutState)
         }
         break;
     case 6: // byte 2
-        convertToBinaryAndSend(&command->byteTwo, ptr_size, printoutState);
+        convertToBinaryAndSend(&command->byteTwo, &size, printoutState);
         size--;
         if (size == 0)
         {
@@ -124,7 +124,7 @@ void sendState(struct Command *command, bool *printoutState)
         }
         break;
     case 8: // checksum
-        convertToBinaryAndSend(&command->checksum, ptr_size, printoutState);
+        convertToBinaryAndSend(&command->checksum, &size, printoutState);
         size--;
         if (size == 0)
         {
