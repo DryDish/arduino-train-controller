@@ -1,5 +1,4 @@
 #include "definitions.h"
-#include "bytesAndbools.h"
 #include "command.h"
 #include "changeCommand.h"
 #include "readCommand.h"
@@ -84,11 +83,11 @@ void prepareTrackCommands()
     // Tell all trains to hard stop
     for (unsigned char i = 0; i < (sizeof(trainNumbers) / sizeof(trainNumbers[0])); i++)
     {
-        changeCommandTrain(&command, trainNumbers[i], HARDSTOP);
+        changeCommand(&command, trainNumbers[i], HARDSTOP);
         addToList(command.byteOne, command.byteTwo);
     }
 
-    // Set all lights to red
+    // Set all lights to green
     for (unsigned short i = 0; i < (sizeof(lightAddresses) / sizeof(lightAddresses[0])); i++)
     {
         changeCommandAccessory(&command, lightAddresses[i], 1, 1);
@@ -137,7 +136,7 @@ unsigned char regenerateCommand()
         return 1;
     }
     Node *item = retreiveFirstItemInList();
-    changeCommandTrain(&command, item->byteOne, item->byteTwo);
+    changeCommand(&command, item->byteOne, item->byteTwo);
     deleteFirstListItem();
     return 0;
 }
@@ -189,7 +188,7 @@ void setup()
     // Start all of the trains
     for (short i = 0; i < 3; i++)
     {
-        changeCommandTrain(&command, trainNumbers[i % 3], SPEED8);
+        changeCommand(&command, trainNumbers[i % 3], SPEED8);
         addToList(command.byteOne, command.byteTwo);
     }
     delay(100);
@@ -203,7 +202,7 @@ void loop()
 {    
     if (loopCounter > 150)
     {
-        changeCommandTrain(&command, 150, 250);
+        changeCommand(&command, 150, 250);
         addToList(command.byteOne, command.byteTwo);
         loopCounter = 0;
     }
@@ -215,11 +214,12 @@ void loop()
 
     
     // If you want to use both readCommand and binary printouts i reccomend 
-    // setting noInterrupts, otherwise things get weird.    
+    // setting noInterrupts, otherwise things get weird.
+    //noInterrupts();
     readCommand(&command, "loop set command to :");
-
+    //interrupts();
     //the sendState(&command) is in ISR loop;
-    
+    loopCounter++;
     delay(100);
 }
 
